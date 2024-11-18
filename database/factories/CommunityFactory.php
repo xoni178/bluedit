@@ -17,7 +17,10 @@ class CommunityFactory extends Factory
     public function definition(): array
     {
         return [
-            //
+            "name" => "HarryPotterGame",
+            "desc" => "blah",
+            "icon_url" => "",
+            "banner_url" => ""
         ];
     }
 }

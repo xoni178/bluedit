@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::create('comments', function (Blueprint $table) {
             $table->id();
-            $table->foreignId("username");
+            $table->string("username");
             $table->foreign("username")->on("users")->references("username");
             $table->foreignId("post_id");
             $table->foreign("post_id")->on("posts")->references("id");

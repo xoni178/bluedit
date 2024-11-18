@@ -13,11 +13,9 @@ return new class extends Migration
     {
         Schema::create('posts', function (Blueprint $table) {
             $table->id();
-            $table->foreignId("username");
+            $table->string("username");
             $table->foreign("username")->on("users")->references("username");
-            $table->foreignId("post_type");
-            $table->foreign("post_type")->on("post_types")->references("id");
-            $table->foreignId("community_name");
+            $table->string("community_name");
             $table->foreign("community_name")->on("communities")->references("name");
             $table->string("title", 255);
             $table->timestamps();
