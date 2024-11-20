@@ -17,8 +17,8 @@ class CommunityFactory extends Factory
     public function definition(): array
     {
         return [
-            "name" => "HarryPotterGame",
-            "desc" => "blah",
+            "name" => fake()->word(),
+            "desc" => "blahblahblahblah",
             "icon_url" => "",
             "banner_url" => ""
         ];

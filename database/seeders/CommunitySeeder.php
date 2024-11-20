@@ -20,6 +20,6 @@ class CommunitySeeder extends Seeder
     public function run(): void
     {
         $this->TruncateTable(Community::class);
-        Community::factory(1)->create();
+        Community::factory(3)->create();
     }
 }
