@@ -13,9 +13,13 @@
     <header>
         <x-pagebars.navbar />
     </header>
-    <main class="h-screen flex flex-row ">
+    <main class="h-screen flex flex-row">
+        <div class="ml-[20%] mt-[70px] w-full flex items-center flex-col">
+            @yield('content')
+        </div>
+
         <x-pagebars.sidebar />
-        @yield('content')
+
     </main>
 </body>
 

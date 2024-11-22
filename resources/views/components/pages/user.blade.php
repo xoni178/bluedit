@@ -1,8 +1,7 @@
 @extends('layout')
 
 @section('content')
-    <section class="w-full flex items-center flex-col ml-[20%] mt-10">
-
+    <section class="w-full flex items-center flex-col">
         <div class="w-[60%] h-[200px] flex flex-row justify-center items-center gap-5">
             <div class="flex flex-row justify-center items-center gap-5">
                 <div>
