@@ -11,14 +11,12 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('comments', function (Blueprint $table) {
-            $table->id();
+        Schema::create("post_votes", function (Blueprint $table) {
             $table->string("username");
-            $table->foreign("username")->references("username")->on("users");
+            $table->foreign("username")->on("users")->references("username");
             $table->foreignId("post_id");
-            $table->foreign("post_id")->references("id")->on("posts");
-            $table->text("body");
-            $table->timestamps();
+            $table->foreign("post_id")->on("posts")->references("id");
+            $table->enum("vote_type", ["UPVOTE", "DOWNVOTE"]);
         });
     }
 
@@ -27,6 +25,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('comments');
+        Schema::dropIfExists("post_votes");
     }
 };

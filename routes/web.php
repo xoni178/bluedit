@@ -3,10 +3,10 @@
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
-    return view('welcome');
+    return view('components.pages.home');
 });
 
 
 Route::group([], function () {
-    Route::get("/u/users", [\App\Http\Controllers\UserController::class, "index"]);
+    Route::get("/users/{user}", [\App\Http\Controllers\UserController::class, "show"]);
 });

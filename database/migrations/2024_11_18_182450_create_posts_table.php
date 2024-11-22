@@ -14,9 +14,9 @@ return new class extends Migration
         Schema::create('posts', function (Blueprint $table) {
             $table->id();
             $table->string("username");
-            $table->foreign("username")->on("users")->references("username");
+            $table->foreign("username")->references("username")->on("users")->onDelete("cascade");
             $table->string("community_name");
-            $table->foreign("community_name")->on("communities")->references("name");
+            $table->foreign("community_name")->references("name")->on("communities")->onDelete("cascade");
             $table->string("title", 255);
             $table->timestamps();
         });

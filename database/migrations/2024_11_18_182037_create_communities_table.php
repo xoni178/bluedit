@@ -12,7 +12,7 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('communities', function (Blueprint $table) {
-            $table->string("name")->unique();
+            $table->string("name")->primary();
             $table->text("desc");
             $table->text("icon_url")->nullable();
             $table->text("banner_url")->nullable();

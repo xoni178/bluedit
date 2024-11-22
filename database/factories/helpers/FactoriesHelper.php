@@ -9,11 +9,14 @@ class FactoriesHelper
      * 
      * @return string
      */
-    public static function RandomPrimaryKey(string $model, int $limit, string $primaryKey): string
+    public static function RandomPrimaryKey(string $model, int $limit, string $primaryKey): ?string
     {
-        if ($model === null || $limit === null || $primaryKey === null) return null;
 
-        $keys  = $model::limit($limit)->pluck($primaryKey)->all();
+        if (!class_exists($model) || $limit <= 0) {
+            return null; // Return null if the class doesn't exist or parameters are invalid
+        }
+
+        $keys = $model::pluck($primaryKey)->take($limit)->toArray();
 
         $randomIndex = rand(0, $limit - 1);
 
