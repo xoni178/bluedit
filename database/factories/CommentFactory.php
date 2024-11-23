@@ -20,8 +20,8 @@ class CommentFactory extends Factory
     public function definition(): array
     {
         return [
-            "username" => FactoriesHelper::RandomPrimaryKey(\App\Models\User::class, 10, "username"),
-            "post_id" => FactoriesHelper::RandomPrimaryKey(\App\Models\Post::class, 6, "id"),
+            "username" => FactoriesHelper::RandomPrimaryKey(\App\Models\User::class, "username"),
+            "post_id" => FactoriesHelper::RandomPrimaryKey(\App\Models\Post::class,  "id"),
             "body" => fake()->sentence()
         ];
     }

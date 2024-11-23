@@ -1,4 +1,4 @@
-<a href=""
+<a href="/hi"
     class="w-full h-[40px] bg-transparent hover:bg-[#192028] flex flex-row justify-start items-center gap-3 p-2 rounded">
     @if ($type === 'link')
         @if ($isHome)
@@ -11,6 +11,7 @@
     @endif
 
     <div>
-        <p class="text-white text-[15px]">{{ $type === 'community' ? 'r/' : null }}{{ $slot }}</p>
+        <p class="text-white text-[15px] hover:underline">{{ $type === 'community' ? 'r/' : null }}{{ $slot }}
+        </p>
     </div>
 </a>

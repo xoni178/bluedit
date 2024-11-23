@@ -11,12 +11,15 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create("comment_votes", function (Blueprint $table) {
+        Schema::create('comment_votes', function (Blueprint $table) {
+            $table->id();
             $table->string("username");
-            $table->foreign("username")->on("users")->references("username");
+            $table->foreign("username")->references("username")->on("users")->onDelete("Cascade");
             $table->foreignId("comment_id");
-            $table->foreign("comment_id")->on("comments")->references("id");
+            $table->foreign("comment_id")->references("id")->on("comments")->onDelete("Cascade");
             $table->enum("vote_type", ["UPVOTE", "DOWNVOTE"]);
+            $table->timestamps();
+            $table->unique(['username', 'comment_id']);
         });
     }
 
@@ -25,6 +28,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists("comment_votes");
+        Schema::dropIfExists('comment_votes');
     }
 };

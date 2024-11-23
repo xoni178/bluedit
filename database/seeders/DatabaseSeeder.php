@@ -2,6 +2,7 @@
 
 namespace Database\Seeders;
 
+use App\Models\Community;
 use Illuminate\Database\Seeder;
 
 class DatabaseSeeder extends Seeder
@@ -15,6 +16,7 @@ class DatabaseSeeder extends Seeder
     {
         $this->call(UserSeeder::class);
         $this->call(CommunitySeeder::class);
+        $this->call(CommunityUserSeeder::class);
         $this->call(PostSeeder::class);
         $this->call(CommentSeeder::class);
     }

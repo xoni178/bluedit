@@ -11,12 +11,15 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create("post_votes", function (Blueprint $table) {
+        Schema::create('post_votes', function (Blueprint $table) {
+            $table->id();
             $table->string("username");
-            $table->foreign("username")->on("users")->references("username");
+            $table->foreign("username")->references("username")->on("users")->onDelete("Cascade");
             $table->foreignId("post_id");
-            $table->foreign("post_id")->on("posts")->references("id");
+            $table->foreign("post_id")->references("id")->on("posts")->onDelete("Cascade");
             $table->enum("vote_type", ["UPVOTE", "DOWNVOTE"]);
+            $table->timestamps();
+            $table->unique(['username', 'post_id']);
         });
     }
 
@@ -25,6 +28,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists("post_votes");
+        Schema::dropIfExists('post_votes');
     }
 };

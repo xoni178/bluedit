@@ -1,5 +1,5 @@
-<div onclick="location.href='/'"
-    class="w-[750px] h-[650px] flex flex-col hover:cursor-pointer hover:bg-[#192028] rounded-xl px-3 border-y-[1px] border-[#192028] shadow-md">
+<div id="post" onclick="location.href='/'"
+    class="w-[750px] h-[650px] flex flex-col hover:cursor-pointer hover:bg-[#192028] hover:rounded-xl px-3 border-b-[1px] border-[#192028] shadow-md">
     <div class="flex flex-row w-[40%] items-center gap-1">
         <div>
             <x-buttons.link :type="'community'">something</x-buttons.link>
@@ -14,12 +14,12 @@
     </div>
     <div class="w-full h-[80%] bg-blue-300 my-2 rounded-lg"></div>
     <div class="w-full h-[5%] flex items-center gap-5">
-        <div class="flex items-center gap-3 px-3 py-1 bg-[#192028] rounded-full">
-            <x-svg.upvote-svg />
+        <div class="flex items-center gap-3 px-3 py-1 bg-[#192028] rounded-full shadow-lg">
+            <x-buttons.upvote />
             <p class="text-white">10</p>
-            <x-svg.downvote-svg />
+            <x-buttons.downvote />
         </div>
-        <div class="flex items-center gap-2 px-3 py-1 bg-[#192028] rounded-full">
+        <div class="flex items-center gap-2 px-3 py-1 bg-[#192028] rounded-full shadow-2xl shadow-black">
             <x-svg.comment-svg />
             <p class="text-white">10</p>
         </div>

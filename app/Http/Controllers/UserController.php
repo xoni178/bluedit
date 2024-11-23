@@ -9,6 +9,12 @@ use App\Services\UserService;
 
 class UserController extends Controller
 {
+    protected $userService;
+
+    public function __construct(UserService $userService)
+    {
+        $this->userService = $userService;
+    }
 
     /**
      * Display specified user
@@ -17,15 +23,15 @@ class UserController extends Controller
      */
     public function show(Request $request, string $username)
     {
-        $userService = new UserService();
 
         try {
-            $user = $userService->getUser($username);
+
+            $user = $this->userService->getUser($username);
 
             return view("components.pages.user", ["user" => $user]);
         } catch (\Illuminate\Database\Eloquent\ModelNotFoundException $err) {
 
-            return view("components.exceptions.not-found", ["exception" => $err]);
+            return response()->view("components.exceptions.not-found", [], 404);
         }
     }
 }

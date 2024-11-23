@@ -57,4 +57,9 @@ class User extends Authenticatable
     {
         return $this->hasMany(\App\Models\Post::class, "username", "username");
     }
+
+    public function communities()
+    {
+        return $this->belongsToMany(Community::class, "community_user", "username", "community_name");
+    }
 }

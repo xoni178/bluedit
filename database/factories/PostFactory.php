@@ -21,8 +21,8 @@ class PostFactory extends Factory
 
 
         return [
-            "username" => FactoriesHelper::RandomPrimaryKey(\App\Models\User::class, 10,  "username"), //Pick a fake random user as the creator of the fake post
-            "community_name" => FactoriesHelper::RandomPrimaryKey(\App\Models\Community::class, 3,  "name"), //Pick a random fake community for the fake post
+            "username" => FactoriesHelper::RandomPrimaryKey(\App\Models\User::class,   "username"), //Pick a fake random user as the creator of the fake post
+            "community_name" => FactoriesHelper::RandomPrimaryKey(\App\Models\Community::class, "name"), //Pick a random fake community for the fake post
             "title" => fake()->sentence(4)
         ];
     }

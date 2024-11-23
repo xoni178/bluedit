@@ -9,4 +9,10 @@ class Community extends Model
 {
     /** @use HasFactory<\Database\Factories\CommunityFactory> */
     use HasFactory;
+
+
+    public function users()
+    {
+        return $this->belongsToMany(User::class, "community_user", "community_name", "username");
+    }
 }
