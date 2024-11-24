@@ -2,12 +2,16 @@
 
 namespace Database\Seeders;
 
-use App\Models\CommunityUser;
-use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 
 //Traits
 use Database\Seeders\Traits\TruncateTrait;
+
+//models
+use App\Models\User;
+use App\Models\Community;
+
+use Database\Factories\helpers\FactoriesHelper;
 
 class CommunityUserSeeder extends Seeder
 {
@@ -18,7 +22,16 @@ class CommunityUserSeeder extends Seeder
      */
     public function run(): void
     {
-        $this->TruncateTable(CommunityUser::class);
-        CommunityUser::factory(5)->create();
+        $this->TruncatePivotTable("community_user");
+
+
+
+        for ($i = 1; $i <= 10; $i++) {
+
+            $array = FactoriesHelper::getUniquePKValues(User::class, "username", Community::class, "name");
+
+            $user = User::findOrFail($array["username"]);
+            $user->communities()->attach($array["name"]);
+        }
     }
 }

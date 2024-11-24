@@ -11,6 +11,13 @@ class Community extends Model
     use HasFactory;
 
 
+    protected $primaryKey = "name";
+
+    protected $keyType = 'string';
+
+    public $incrementing = false;
+
+
     public function users()
     {
         return $this->belongsToMany(User::class, "community_user", "community_name", "username");

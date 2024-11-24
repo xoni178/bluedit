@@ -9,4 +9,9 @@ Route::get('/', function () {
 
 Route::group([], function () {
     Route::get("/users/{user}", [\App\Http\Controllers\UserController::class, "show"]);
+    Route::get("/register", [\App\Http\Controllers\UserController::class, "create"]);
+});
+
+Route::group([], function () {
+    Route::get("/create", [\App\Http\Controllers\PostController::class, "create"]);
 });

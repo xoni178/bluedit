@@ -13,6 +13,6 @@ class Post extends Model
 
     public function user()
     {
-        return $this->belongsTo(\App\Models\User::class, "username", "username");
+        return $this->belongsToMany(\App\Models\User::class, "post_votes", "post_id", "username");
     }
 }

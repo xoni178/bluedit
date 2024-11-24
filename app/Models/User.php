@@ -52,14 +52,18 @@ class User extends Authenticatable
         ];
     }
 
-
-    public function posts()
-    {
-        return $this->hasMany(\App\Models\Post::class, "username", "username");
-    }
-
     public function communities()
     {
         return $this->belongsToMany(Community::class, "community_user", "username", "community_name");
+    }
+
+    public function posts()
+    {
+        return $this->belongsToMany(\App\Models\Post::class, "post_votes", "username", "post_id");
+    }
+
+    public function comments()
+    {
+        return $this->belongsToMany(Community::class, "comment_votes", "username", "comment_id");
     }
 }

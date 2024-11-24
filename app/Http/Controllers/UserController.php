@@ -34,4 +34,9 @@ class UserController extends Controller
             return response()->view("components.exceptions.not-found", [], 404);
         }
     }
+
+    public function create()
+    {
+        return view("components.pages.register");
+    }
 }
