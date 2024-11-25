@@ -21,6 +21,6 @@ class UserSeeder extends Seeder
     public function run(): void
     {
         $this->TruncateTable(User::class);
-        User::factory(10)->create();
+        User::factory(50)->create();
     }
 }

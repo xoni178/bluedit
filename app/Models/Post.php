@@ -15,4 +15,9 @@ class Post extends Model
     {
         return $this->belongsToMany(\App\Models\User::class, "post_votes", "post_id", "username");
     }
+
+    public function community()
+    {
+        return $this->belongsTo(Community::class, "community_name", "name");
+    }
 }

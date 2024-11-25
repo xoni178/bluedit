@@ -1,20 +1,19 @@
 <?php
 
-namespace App\View\Components;
+namespace App\View\Components\buttons;
 
 use Closure;
 use Illuminate\Contracts\View\View;
 use Illuminate\View\Component;
 
-class post extends Component
+class create extends Component
 {
-    public $post;
     /**
      * Create a new component instance.
      */
-    public function __construct(\App\Models\Post $post)
+    public function __construct()
     {
-        $this->post = $post;
+        //
     }
 
     /**
@@ -22,6 +21,6 @@ class post extends Component
      */
     public function render(): View|Closure|string
     {
-        return view('components.post');
+        return view('components.buttons.create');
     }
 }

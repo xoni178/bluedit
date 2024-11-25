@@ -22,4 +22,9 @@ class Community extends Model
     {
         return $this->belongsToMany(User::class, "community_user", "community_name", "username");
     }
+
+    public function posts()
+    {
+        return $this->hasMany(Post::class, "community_name", "name");
+    }
 }
