@@ -7,15 +7,27 @@ Route::get('/', function () {
 });
 
 
-Route::group([], function () {
-    Route::get("/users/{username}", [\App\Http\Controllers\UserController::class, "show"]);
-    Route::get("/register", [\App\Http\Controllers\UserController::class, "create"]);
+Route::controller(\App\Http\Controllers\UserController::class)->group(function () {
+    Route::get("/register",  "index");
+    Route::get("/users/{username}", "show");
+    //Route::get("/users/{username}/comments", [\App\Http\Controllers\UserController::class, "showComments"]);
+    Route::get("/users/{username}/upvotes",  "showUpvotes");
+    Route::get("/users/{username}/downvotes", "showDownvotes");
+
+    //post
+    Route::post("/register",  "create");
 });
 
-Route::group([], function () {
-    Route::get("/create", [\App\Http\Controllers\PostController::class, "create"]);
+Route::controller(\App\Http\Controllers\SessionController::class)->group(function () {
+    Route::get("/login", "create");
+    Route::post("/login",  "store");
+    Route::post("/logout",  "destroy");
 });
 
-Route::group([], function () {
-    Route::get("/r/{community_name}", [\App\Http\Controllers\CommunityController::class, "show"]);
+Route::controller(\App\Http\Controllers\PostController::class)->group(function () {
+    Route::get("/create", "create");
+});
+
+Route::controller(\App\Http\Controllers\CommunityController::class)->group(function () {
+    Route::get("/r/{community_name}", "show");
 });

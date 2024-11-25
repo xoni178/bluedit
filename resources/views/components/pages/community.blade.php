@@ -17,10 +17,7 @@
                 </div>
                 <div class="flex flex-row gap-6">
                     <x-buttons.create />
-                    <div
-                        class="w-[80px] flex justify-center items-center border-[1px] border-[#192028] rounded-full px-3 py-1 hover:cursor-pointer hover:bg-[#192028]">
-                        <p class="text-white">Join</p>
-                    </div>
+                    <x-buttons.fancy link="/">Join</x-buttons.fancy>
                 </div>
 
             </div>

@@ -1,3 +1,12 @@
-<div class="hover:cursor-pointer hover:bg-slate-400 rounded-lg px-3 py-2 text-white">
-    <p>{{ $slot }}</p>
-</div>
+<a @class([
+    'w-fit',
+    'px-4',
+    'py-2',
+    'rounded-full',
+    'hover:bg-[#192028]',
+    'hover:cursor-pointer',
+    'bg-[#192028]' => $active,
+    'bg-transparent' => !$active,
+]) href="{{ $link }}">
+    <p class="text-white">{{ $slot }}</p>
+</a>

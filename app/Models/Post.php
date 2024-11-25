@@ -10,8 +10,12 @@ class Post extends Model
     /** @use HasFactory<\Database\Factories\PostFactory> */
     use HasFactory;
 
-
     public function user()
+    {
+        return $this->belongsTo(\App\Models\User::class, "username", "username");
+    }
+
+    public function users()
     {
         return $this->belongsToMany(\App\Models\User::class, "post_votes", "post_id", "username");
     }

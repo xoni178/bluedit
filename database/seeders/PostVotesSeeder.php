@@ -21,6 +21,6 @@ class PostVotesSeeder extends Seeder
     {
 
         $this->TruncateTable(PostVotes::class);
-        PostVotes::factory(40)->create();
+        PostVotes::factory(180)->create();
     }
 }

@@ -2,20 +2,21 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\StoreUserRequest;
 use Illuminate\Http\Request;
 
-//services
-use App\Services\ModelService;
+use App\Models\User;
+use Illuminate\Contracts\Database\Eloquent\Builder;
+
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Password;
 
 class UserController extends Controller
 {
-    protected $modelService;
-
-    public function __construct(ModelService $modelService)
+    public function index()
     {
-        $this->modelService = $modelService;
+        return view("components.pages.register");
     }
-
     /**
      * Display specified user
      * 
@@ -26,17 +27,46 @@ class UserController extends Controller
 
         try {
 
-            $user = $this->modelService->getEntity(\App\Models\User::class, $username);
+            $user = User::findOrFail($username);
 
-            return response()->view("components.pages.user", ["user" => $user], 200);
+            $posts = $user->posts()->withCount([
+                "users AS upvote_count" => function (Builder $query) {
+                    $query->where("vote_type", "UPVOTE");
+                },
+                "users AS downvote_count" => function (Builder $query) {
+                    $query->where("vote_type", "DOWNVOTE");
+                }
+            ])->paginate(7);
+
+            return response()->view("components.pages.user", ["user" => $user, "posts" => $posts], 200);
         } catch (\Illuminate\Database\Eloquent\ModelNotFoundException $err) {
 
             return response()->view("components.exceptions.not-found", ["name" => "user"], 404);
         }
     }
 
-    public function create()
+    public function showComments()
     {
-        return view("components.pages.register");
+        return response("<h1>comments</h1>");
+    }
+    public function showUpvotes()
+    {
+        return response("<h1>upvotes</h1>");
+    }
+    public function showDownvotes()
+    {
+        return response("<h1>downvotes</h1>");
+    }
+
+
+    public function create(StoreUserRequest $request)
+    {
+        $validated = $request->validated();
+
+        $user = User::create($validated);
+
+        Auth::login($user);
+
+        return redirect("/");
     }
 }
