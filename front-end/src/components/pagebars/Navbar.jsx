@@ -1,3 +1,9 @@
+import { CreateButton } from "../buttons";
+
+import BlueditLogo from "../../assets/img/bluedit.png";
+
+import { ReactComponent as UserSvg } from "../../assets/svg/user.svg";
+
 export default function Navbar() {
   return (
     <nav className="w-full h-[60px] bg-[#090e13] flex justify-between items-center border-[#192028] border-b px-5 fixed z-10">
@@ -8,7 +14,7 @@ export default function Navbar() {
         <div className="w-full h-full flex justify-center items-center">
           <img
             className=" object-contain w-[80%] h-[80%]"
-            src="{{ asset('img/bluedit.png') }}"
+            src={BlueditLogo}
             alt="bluedit logo"
           />
         </div>
@@ -24,13 +30,10 @@ export default function Navbar() {
         <x-buttons.fancy link="/login">Login</x-buttons.fancy>
     @endguest */}
       {/* @auth */}
-      <div
-        className="flex flex-row items-center gap-5 p-2"
-        onclick="toggleDropdown(event)"
-      >
-        {/* <x-buttons.create /> */}
+      <div className="flex flex-row items-center gap-5 p-2">
+        <CreateButton />
         <a className="hover:cursor-pointer" href="/">
-          {/* <x-svg.user-icon :size="32" /> */}
+          <UserSvg />
         </a>
       </div>
       <div id="drop" className="hidden absolute right-3 top-[60px]">

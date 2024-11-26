@@ -7,8 +7,8 @@ function App() {
       <header>
         <Navbar />
       </header>
-      <main class="h-screen flex flex-row">
-        <div class="ml-[20%] mt-[70px] w-full flex items-center flex-col">
+      <main className="h-screen flex flex-row">
+        <div className="ml-[20%] mt-[70px] w-full flex items-center flex-col">
           <HomePage />
         </div>
         <Sidebar />
