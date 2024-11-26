@@ -11,29 +11,13 @@
     </div>
     <div class="flex flex-col gap-2 border-b-[1px] border-[#192028] pb-5">
         <x-buttons.collapsible>Communities</x-buttons.collapsible>
-        <x-buttons.link :type="'community'">something</x-buttons.link>
-        <x-buttons.link :type="'community'">something</x-buttons.link>
-        <x-buttons.link :type="'community'">something</x-buttons.link>
-        <x-buttons.link :type="'community'">something</x-buttons.link>
-        <x-buttons.link :type="'community'">something</x-buttons.link>
-        <x-buttons.link :type="'community'">something</x-buttons.link>
-        <x-buttons.link :type="'community'">something</x-buttons.link>
-        <x-buttons.link :type="'community'">something</x-buttons.link>
-        <x-buttons.link :type="'community'">something</x-buttons.link>
-        <x-buttons.link :type="'community'">something</x-buttons.link>
-        <x-buttons.link :type="'community'">something</x-buttons.link>
-        <x-buttons.link :type="'community'">something</x-buttons.link>
-        <x-buttons.link :type="'community'">something</x-buttons.link>
-        <x-buttons.link :type="'community'">something</x-buttons.link>
-        <x-buttons.link :type="'community'">something</x-buttons.link>
-        <x-buttons.link :type="'community'">something</x-buttons.link>
-        <x-buttons.link :type="'community'">something</x-buttons.link>
-        <x-buttons.link :type="'community'">something</x-buttons.link>
-        <x-buttons.link :type="'community'">something</x-buttons.link>
-        <x-buttons.link :type="'community'">something</x-buttons.link>
-        <x-buttons.link :type="'community'">something</x-buttons.link>
-        <x-buttons.link :type="'community'">something</x-buttons.link>
-        <x-buttons.link :type="'community'">something</x-buttons.link>
-        <x-buttons.link :type="'community'">something</x-buttons.link>
+
+        @if (Auth::user()->subcribed_communities->count())
+            @foreach (Auth::user()->subcribed_communities as $community)
+                <x-buttons.link :link="$community->name" :type="'community'">{{ $community->name }}</x-buttons.link>
+            @endforeach
+        @endif
+
+
     </div>
 </section>

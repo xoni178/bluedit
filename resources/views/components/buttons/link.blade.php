@@ -1,4 +1,4 @@
-<a href="/hi"
+<a href="/r/{{ $link }}"
     class="w-full h-[40px] bg-transparent hover:bg-[#192028] flex flex-row justify-start items-center gap-3 p-2 rounded">
     @if ($type === 'link')
         @if ($isHome)

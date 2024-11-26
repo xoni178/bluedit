@@ -1,7 +1,7 @@
 <nav class="w-full h-[60px] bg-[#090e13] flex justify-between items-center border-[#192028] border-b px-5 fixed z-10">
     <a class="w-[130px] h-full flex justify-center items-center " href="/">
         <div class="w-full h-full flex justify-center items-center">
-            <img class=" object-cover" src="{{ asset('img/bluedit.png') }}" alt="bluedit logo">
+            <img class=" object-contain w-[80%] h-[80%]" src="{{ asset('img/bluedit.png') }}" alt="bluedit logo">
         </div>
         <div>
             <p class="w-full h-full text-[#3278cd] font-bold text-xl">bluedit</p>

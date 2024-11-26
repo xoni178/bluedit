@@ -1,4 +1,4 @@
-<div id="post" onclick="location.href='/'"
+<div id="post" onclick="location.href='/posts/{{ $post->id }}/{{ str_replace(' ', '_', $post->title) }}'"
     class="w-[750px] h-[650px] flex flex-col hover:cursor-pointer hover:bg-[#192028] hover:rounded-xl px-3 border-b-[1px] border-[#192028] shadow-md">
     <div class="flex flex-row w-[40%] items-center gap-1">
         <div>

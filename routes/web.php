@@ -2,9 +2,10 @@
 
 use Illuminate\Support\Facades\Route;
 
-Route::get('/', function () {
-    return view('components.pages.home');
+Route::controller(\App\Http\Controllers\HomeController::class)->group(function () {
+    Route::get('/', "index");
 });
+
 
 
 Route::controller(\App\Http\Controllers\UserController::class)->group(function () {
@@ -25,7 +26,9 @@ Route::controller(\App\Http\Controllers\SessionController::class)->group(functio
 });
 
 Route::controller(\App\Http\Controllers\PostController::class)->group(function () {
-    Route::get("/create", "create");
+    Route::get("/create", "index");
+
+    Route::get("/posts/{post_id}/{slug?}", "show")->name("post.show");
 });
 
 Route::controller(\App\Http\Controllers\CommunityController::class)->group(function () {

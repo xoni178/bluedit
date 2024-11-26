@@ -43,7 +43,7 @@ class CommunityController extends Controller
     public function show($community_name)
     {
         try {
-            $community = Community::class::findOrFail($community_name);
+            $community = Community::findOrFail($community_name);
 
             $posts = $community->posts()->withCount([
                 "users AS upvote_count" => function (Builder $query) {

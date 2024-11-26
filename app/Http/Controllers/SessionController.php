@@ -13,7 +13,7 @@ class SessionController extends Controller
 {
     public function create()
     {
-        return view("components.pages.login");
+        return response()->view("components.pages.login");
     }
 
     public function store(StoreSessionRequest $request)
@@ -23,7 +23,8 @@ class SessionController extends Controller
 
         if (!Auth::attempt($validated)) {
             throw ValidationException::withMessages([
-                "email" => "Sorry"
+                "email" => "invalid email",
+                "password" => "invalid password"
             ]);
         }
 

@@ -44,7 +44,7 @@ class FactoriesHelper
 
         $str = implode("", $current);
 
-        dump(self::$allValues);
+        //dump(self::$allValues);
 
         if (count(self::$allValues) === 0) {
             array_push(self::$allValues, $str);

@@ -68,6 +68,12 @@ class User extends Authenticatable
             ->count();
     }
 
+    public function getSubcribedCommunitiesAttribute()
+    {
+        return $this->communities()->get();
+    }
+
+
     public function communities()
     {
         return $this->belongsToMany(Community::class, "community_user", "username", "community_name");
