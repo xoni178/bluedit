@@ -33,7 +33,9 @@ export default function Navbar() {
       <div className="flex flex-row items-center gap-5 p-2">
         <CreateButton />
         <a className="hover:cursor-pointer" href="/">
-          <UserSvg />
+          <div className="w-[32px] h-[32]">
+            <UserSvg />
+          </div>
         </a>
       </div>
       <div id="drop" className="hidden absolute right-3 top-[60px]">

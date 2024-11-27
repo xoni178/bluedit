@@ -20,6 +20,6 @@ class PostSeeder extends Seeder
     public function run(): void
     {
         $this->TruncateTable(Post::class);
-        Post::factory(6)->create();
+        Post::factory(200)->create();
     }
 }

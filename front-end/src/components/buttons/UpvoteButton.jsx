@@ -1,4 +1,5 @@
-import UpvoteSvg from "../../assets/svg/upvote.svg";
+import { ReactComponent as UpvoteSvg } from "../../assets/svg/upvote.svg";
+
 export default function SimpleButton() {
   return (
     <button>
