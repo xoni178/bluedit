@@ -30,22 +30,9 @@ class UserController extends Controller
 
             $user = User::findOrFail($username);
 
-            // $posts = $user->posts()->withCount([
-            //     "users AS upvote_count" => function (Builder $query) {
-            //         $query->where("vote_type", "UPVOTE");
-            //     },
-            //     "users AS downvote_count" => function (Builder $query) {
-            //         $query->where("vote_type", "DOWNVOTE");
-            //     }
-            // ])->limit(7)->get();
-
-
-
-            // return response()->view("components.pages.user", ["user" => $user, "posts" => $posts], 200);
             return new UserResource($user);
         } catch (\Illuminate\Database\Eloquent\ModelNotFoundException $err) {
-
-            return response()->view("components.exceptions.not-found", ["name" => "user"], 404);
+            return response()->json(["404, User not found"], 404);
         }
     }
 

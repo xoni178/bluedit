@@ -22,7 +22,7 @@ class PostResource extends JsonResource
             "downvote_count" => $this->downvote_count,
             "title" => $this->title,
 
-            "created_at" => $this->created_at->format("d:m:y.h:m")
+            "created_at" => $this->created_at->format("d:m:y-h:m")
         ];
     }
 }
