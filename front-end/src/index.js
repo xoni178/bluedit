@@ -3,28 +3,35 @@ import ReactDOM from "react-dom/client";
 import "./index.css";
 import reportWebVitals from "./reportWebVitals";
 
-import App from "./App";
+import {
+  UserPage,
+  HomePage,
+  LoginPage,
+  PostPage,
+  RegisterPage,
+  CreatePostPage,
+  CommunityPage,
+} from "./components/pages";
 
-import { UserPage } from "./components/pages";
+import { BrowserRouter, Routes, Route } from "react-router-dom";
 
-import { createBrowserRouter, RouterProvider } from "react-router-dom";
-
-const router = createBrowserRouter([
-  {
-    path: "/",
-    element: <App />,
-  },
-  {
-    path: "/users/*",
-    element: <UserPage />,
-  },
-]);
+import { DataContext } from "./api/DataContext";
 
 const root = ReactDOM.createRoot(document.getElementById("root"));
 root.render(
-  <React.StrictMode>
-    <RouterProvider router={router} />
-  </React.StrictMode>
+  <DataContext>
+    <BrowserRouter>
+      <Routes>
+        <Route path="/" element={<HomePage />} />
+        <Route path="/users/*" element={<UserPage />} />
+        <Route path="/login" element={<LoginPage />} />
+        <Route path="/posts/*" element={<PostPage />} />
+        <Route path="/register" element={<RegisterPage />} />
+        <Route path="/create" element={<CreatePostPage />} />
+        <Route path="/r/*" element={<CommunityPage />} />
+      </Routes>
+    </BrowserRouter>
+  </DataContext>
 );
 
 // If you want to start measuring performance in your app, pass a function

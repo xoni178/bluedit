@@ -6,7 +6,7 @@ export default function Post({ post }) {
     <div className="w-[750px] h-[650px] flex flex-col hover:cursor-pointer hover:bg-[#192028] hover:rounded-xl px-3 border-b-[1px] border-[#192028] shadow-md">
       <div className="flex flex-row w-[40%] items-center gap-1">
         <div>
-          <LinkButton slot={post.community_name} />
+          <LinkButton type={"community"} slot={post.community_name} />
         </div>
         <span className="w-1 h-1 rounded-full bg-white"></span>
         <div>
@@ -21,8 +21,9 @@ export default function Post({ post }) {
         <div className="flex items-center gap-3 px-3 py-1 bg-[#192028] rounded-full shadow-lg">
           <UpvoteButton />
           <p className="text-white">
-            {console.log(post.upvote_count, post.downvote_count)}
-            {post.upvote_count - post.downvote_count}
+            {post.upvote_count && post.downvote_count
+              ? post.upvote_count - post.downvote_count
+              : 0}
           </p>
           <DownvoteButton />
         </div>
