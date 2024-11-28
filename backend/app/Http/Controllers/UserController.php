@@ -52,16 +52,23 @@ class UserController extends Controller
 
     public function create(StoreUserRequest $request)
     {
+
         $validated = $request->validated();
 
         $user = User::create($validated);
 
 
-        Auth::login($user);
+        if (!Auth::attempt($validated)) {
+            return response()->json([
+                "err" => "something went wrong"
+            ]);
+        }
+
+        $token = $user->createToken("token of " . $user->username);
 
         return response()->json([
             "username" => $user->username,
-            "token" =>  $user->createToken("token of " . $user->username)->plainTextToken()
+            "token" =>  $token->plainTextToken
         ]);
     }
 }

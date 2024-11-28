@@ -25,10 +25,9 @@ Route::controller(\App\Http\Controllers\UserController::class)->group(function (
 
 
 Route::controller(\App\Http\Controllers\SessionController::class)->group(function () {
-    // Route::get("/login", "create");
     Route::post("/login",  "store");
     // Route::post("/logout",  "destroy");
-})->middleware("auth:sanctum");;
+})->middleware("auth:sanctum");
 
 Route::controller(\App\Http\Controllers\PostController::class)->group(function () {
     Route::get("/create", "index");
