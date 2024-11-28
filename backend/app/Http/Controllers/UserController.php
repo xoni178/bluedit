@@ -56,8 +56,12 @@ class UserController extends Controller
 
         $user = User::create($validated);
 
+
         Auth::login($user);
 
-        return redirect("/");
+        return response()->json([
+            "username" => $user->username,
+            "token" =>  $user->createToken("token of " . $user->username)->plainTextToken()
+        ]);
     }
 }
