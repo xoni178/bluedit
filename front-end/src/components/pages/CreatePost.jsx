@@ -1,7 +1,25 @@
 import App from "../../App";
 import { SimpleButton } from "../buttons";
+
+import ApiRequest from "../../api/ApiRequest";
+import { useEffect, useState } from "react";
+
 export default function CreatePost() {
-  return (
+  const [show, SetShow] = useState(false);
+  useEffect(() => {
+    ApiRequest.get("/api/user", {
+      headers: {
+        Authorization: `Bearer ${
+          JSON.parse(localStorage.getItem("authUser"))?.token
+        }`,
+      },
+    }).then((data) => {
+      console.log(data);
+      SetShow(true);
+    });
+  }, []);
+
+  return show ? (
     <App>
       <section className="w-[50%] h-fit flex flex-col gap-3">
         <div className="flex">
@@ -43,5 +61,5 @@ export default function CreatePost() {
         </div>
       </section>
     </App>
-  );
+  ) : null;
 }

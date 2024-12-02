@@ -21,7 +21,7 @@ export default function Login() {
         console.log(userData);
         SetAuthUser(userData.data);
         localStorage.setItem("authUser", JSON.stringify(userData.data));
-        // navigate("/");
+        navigate("/");
       });
     });
   };

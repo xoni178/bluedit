@@ -7,15 +7,16 @@ use App\Http\Requests\StorePostRequest;
 use App\Http\Requests\UpdatePostRequest;
 
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Http\Request;
 
 class PostController extends Controller
 {
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
-        return view("components.pages.createPost");
+        return response()->json($request->user());
     }
 
     /**

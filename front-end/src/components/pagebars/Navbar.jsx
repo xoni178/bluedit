@@ -8,11 +8,25 @@ import BlueditLogo from "../../assets/img/bluedit.png";
 import { ReactComponent as UserSvg } from "../../assets/svg/user.svg";
 
 import { useBlueditDataContext } from "../../api/DataContext";
-
+import ApiRequest from "../../api/ApiRequest";
+import { useNavigate } from "react-router-dom";
 export default function Navbar() {
-  const { authUser } = useBlueditDataContext();
+  const navigate = useNavigate();
+  const { authUser, SetAuthUser } = useBlueditDataContext();
 
   const [isActive, SetIsActive] = useState(false);
+
+  const logout = (e) => {
+    e.preventDefault();
+
+    ApiRequest.get("/sanctum/csrf-cookie").then(() => {
+      ApiRequest.post("/api/logout").then(() => {
+        localStorage.removeItem("authUser");
+        SetAuthUser({});
+        navigate("/");
+      });
+    });
+  };
 
   return (
     <nav className="w-full h-[60px] bg-[#090e13] flex justify-between items-center border-[#192028] border-b px-5 fixed z-10 object-cover">
@@ -64,11 +78,10 @@ export default function Navbar() {
               </div>
               <div>
                 <form action="/logout" method="POST">
-                  {/* @csrf */}
-
                   <button
                     type="submit"
                     className="bg-transparent text-sm hover:underline"
+                    onClick={(e) => logout(e)}
                   >
                     <p className="text-red-500 select-none">Logout</p>
                   </button>
@@ -80,23 +93,6 @@ export default function Navbar() {
       ) : (
         <FancyButton link="/login" slot="Login" />
       )}
-
-      {/* @endauth */}
     </nav>
   );
-}
-{
-  /* <script>
-    isHidden = false;
-
-    function toggleDropdown(e) {
-        e.preventDefault();
-
-        dropdown = document.querySelector("#drop");
-
-        isHidden ? dropdown.style.display = "none" : dropdown.style.display = "block"
-
-        isHidden = !isHidden
-    }
-</script> */
 }
