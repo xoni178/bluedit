@@ -3,14 +3,10 @@
 namespace App\Http\Controllers;
 
 use App\Http\Resources\PostResource;
-use Illuminate\Http\Request;
 
 use App\Models\Community;
-use App\Models\User;
 use App\Models\Post;
-use App\View\Components\pages\community as PagesCommunity;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Database\Eloquent\Builder;
 
 class HomeController extends Controller
 {
@@ -40,16 +36,7 @@ class HomeController extends Controller
         $posts = Post::whereIn("community_name", $communities->pluck("name"))
             ->offset($randomOffset)
             ->limit($randomValue)
-            ->inRandomOrder()->withCount([
-                "users AS upvote_count" => function (Builder $query) {
-                    $query->where("vote_type", "UPVOTE");
-                },
-                "users AS downvote_count" => function (Builder $query) {
-                    $query->where("vote_type", "DOWNVOTE");
-                }
-            ])->paginate(7);
-
-        // return response()->view("components.pages.home", ["posts" => $posts]);
+            ->inRandomOrder()->paginate(10);
 
         return PostResource::collection($posts);
     }

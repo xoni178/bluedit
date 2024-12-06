@@ -65,7 +65,7 @@ class User extends Authenticatable
     {
         return $this->comments()
             ->join('comment_votes', 'comments.id', '=', 'comment_votes.comment_id')
-            ->where('comment_votes.vote_type', 'UPVOTE')
+            ->where('comment_votes.vote_type', 'DOWNVOTE')
             ->count();
     }
 
@@ -82,12 +82,12 @@ class User extends Authenticatable
 
     public function posts()
     {
-        return $this->hasMany(\App\Models\Post::class, "username", "username");
+        return $this->hasMany(Post::class, "username", "username");
     }
 
     public function posts_voted()
     {
-        return $this->belongsToMany(\App\Models\Post::class, "post_votes", "username", "post_id");
+        return $this->belongsToMany(Post::class, "post_votes", "username", "post_id");
     }
 
     public function comments()
@@ -96,6 +96,6 @@ class User extends Authenticatable
     }
     public function comments_voted()
     {
-        return $this->belongsToMany(Community::class, "comment_votes", "username", "comment_id");
+        return $this->belongsToMany(Comment::class, "comment_votes", "username", "comment_id");
     }
 }

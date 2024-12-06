@@ -66,7 +66,7 @@ return [
         ],
 
         // 'users' => [
-        //     'driver' => 'database',
+        //     'driver' => 'database', 
         //     'table' => 'users',
         // ],
     ],

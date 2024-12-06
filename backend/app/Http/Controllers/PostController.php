@@ -5,7 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Post;
 use App\Http\Requests\StorePostRequest;
 use App\Http\Requests\UpdatePostRequest;
-
+use App\Http\Resources\PostCommentResource;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\Request;
 
@@ -35,32 +35,15 @@ class PostController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show($post_id, $slug = null)
+    public function show($post_id)
     {
         try {
+            $post = Post::FindOrFail($post_id);
 
-            $post = Post::findOrFail($post_id)->withCount([
-                "users AS upvote_count" => function (Builder $query) {
-                    $query->where("vote_type", "UPVOTE");
-                },
-                "users AS downvote_count" => function (Builder $query) {
-                    $query->where("vote_type", "DOWNVOTE");
-                }
-            ])->first();
-
-            if ($slug === null || $slug !== str_replace(' ', '_', $post->title)) {
-
-
-                return redirect()->route("post.show", [
-                    "post_id" => $post->id,
-                    "slug" =>  str_replace(' ', '_', $post->title)
-                ]);
-            }
-
-            return response()->view("components.pages.post", ["post" => $post]);
+            return new PostCommentResource(["post" => $post, "comments" => $post->comments]);
         } catch (\Illuminate\Database\Eloquent\ModelNotFoundException $err) {
 
-            return response()->view("components.exceptions.not-found", ["name" => "post"], 404);
+            return response()->json(["error" => "Not found"],  404);
         }
     }
 
