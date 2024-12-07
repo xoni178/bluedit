@@ -15,7 +15,8 @@ Route::get('/user', function (Request $request) {
 })->middleware('auth:sanctum');
 
 Route::controller(\App\Http\Controllers\HomeController::class)->group(function () {
-    Route::get('/', "index");
+    Route::get("/", "index");
+    Route::get("/search", "search");
 });
 
 Route::controller(\App\Http\Controllers\UserController::class)->group(function () {
