@@ -113,18 +113,10 @@ class UserController extends Controller
 
         $user = User::create($validated);
 
-
-        if (!Auth::attempt($validated)) {
-            return response()->json([
-                "err" => "something went wrong"
-            ]);
-        }
-
         $token = $user->createToken("token of " . $user->username);
 
-        return response()->json([
-            "username" => $user->username,
-            "token" =>  $token->plainTextToken
-        ]);
+        return response()->json(["username" => $user->username])
+            ->header('Content-Type', 'application/json')
+            ->header('Set-Cookie', "token=" . $token->plainTextToken . "; HttpOnly;");
     }
 }

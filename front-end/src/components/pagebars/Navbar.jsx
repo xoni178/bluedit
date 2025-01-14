@@ -9,7 +9,9 @@ import { ReactComponent as UserSvg } from "../../assets/svg/user.svg";
 
 import { useBlueditDataContext } from "../../api/DataContext";
 import ApiRequest from "../../api/ApiRequest";
+
 import { useNavigate } from "react-router-dom";
+
 export default function Navbar() {
   const navigate = useNavigate();
   const { authUser, SetAuthUser } = useBlueditDataContext();
@@ -22,7 +24,7 @@ export default function Navbar() {
     ApiRequest.get("/sanctum/csrf-cookie").then(() => {
       ApiRequest.post("/api/logout").then(() => {
         localStorage.removeItem("authUser");
-        SetAuthUser({});
+        SetAuthUser(null);
         navigate("/");
       });
     });

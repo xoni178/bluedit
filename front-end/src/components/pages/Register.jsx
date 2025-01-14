@@ -11,6 +11,11 @@ export default function User() {
   const { SetAuthUser } = useBlueditDataContext();
   const navigate = useNavigate();
 
+  const [username, SetUsername] = useState("");
+  const [email, SetEmail] = useState("");
+  const [password, SetPassword] = useState("");
+  const [password_confirmation, SetPasswordConfirmation] = useState("");
+
   const [errors, SetErrors] = useState(null);
 
   const onSubmit = (e) => {
@@ -18,10 +23,10 @@ export default function User() {
 
     ApiRequest.get("/sanctum/csrf-cookie").then(() => {
       ApiRequest.post("api/register", {
-        username: "xoni121",
-        email: "xoni631@example.net",
-        password: "xonixoni",
-        password_confirmation: "xonixoni",
+        username,
+        email,
+        password,
+        password_confirmation,
       })
         .then((userData) => {
           SetAuthUser(userData.data);
@@ -52,6 +57,7 @@ export default function User() {
                 name="username"
                 placeholder="username"
                 className="w-full h-[60px] px-5 py-2 bg-transparent border-[1px] border-[#192028] rounded-full text-white outline-none"
+                onChange={(e) => SetUsername(e.target.value)}
                 required
               />
               {errors ? (
@@ -71,6 +77,7 @@ export default function User() {
                 name="email"
                 placeholder="example@example.com"
                 className="w-full h-[60px] px-5 py-2 bg-transparent border-[1px] border-[#192028] rounded-full text-white outline-none"
+                onChange={(e) => SetEmail(e.target.value)}
                 required
               />
               {errors ? (
@@ -93,6 +100,7 @@ export default function User() {
                 name="password"
                 placeholder="password"
                 className="w-full h-[60px] px-5 py-2 bg-transparent border-[1px] border-[#192028] rounded-full text-white outline-none"
+                onChange={(e) => SetPassword(e.target.value)}
                 required
               />
               {errors ? (
@@ -112,6 +120,7 @@ export default function User() {
                 name="password_confirmation"
                 placeholder="confirm password"
                 className="w-full h-[60px] px-5 py-2 bg-transparent border-[1px] border-[#192028] rounded-full text-white outline-none"
+                onChange={(e) => SetPasswordConfirmation(e.target.value)}
                 required
               />
               {errors ? (

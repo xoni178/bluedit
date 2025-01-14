@@ -11,7 +11,11 @@ import {
   RegisterPage,
   CreatePostPage,
   CommunityPage,
+  UserCommentsPage,
+  UserUpvotesPage,
 } from "./components/pages";
+
+import NotFound from "./components/exceptions/NotFound";
 
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 
@@ -23,12 +27,19 @@ root.render(
     <BrowserRouter>
       <Routes>
         <Route path="/" element={<HomePage />} />
-        <Route path="/users/*" element={<UserPage />} />
+        <Route path="/users/:username" element={<UserPage />} />
+        <Route
+          path="/users/:username/comments"
+          element={<UserCommentsPage />}
+        />
+        <Route path="/users/:username/upvotes" element={<UserUpvotesPage />} />
         <Route path="/login" element={<LoginPage />} />
         <Route path="/posts/*" element={<PostPage />} />
         <Route path="/register" element={<RegisterPage />} />
         <Route path="/create" element={<CreatePostPage />} />
-        <Route path="/r/*" element={<CommunityPage />} />
+        <Route path="/r/:community" element={<CommunityPage />} />
+
+        <Route path="*" element={<NotFound />} />
       </Routes>
     </BrowserRouter>
   </DataContext>

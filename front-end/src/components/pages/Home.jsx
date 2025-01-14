@@ -8,7 +8,10 @@ import App from "../../App";
 //context
 import { useBlueditDataContext } from "../../api/DataContext";
 
+import { useNavigate } from "react-router";
+
 export default function Home() {
+  const navigate = useNavigate();
   const [isFirstRender, SetIsFirstRender] = useState(true);
   const [posts, SetPosts] = useState([]);
   const [links, SetLinks] = useState({});
@@ -43,7 +46,16 @@ export default function Home() {
     <App>
       <div className="flex flex-col gap-5  mt-14">
         {posts.map((post, index) => {
-          return <Post key={index} post={post} />;
+          const postTitle = post.title.replaceAll(" ", "_");
+
+          return (
+            <Post
+              key={index}
+              post={post}
+              displayUsername={false}
+              onClick={() => navigate(`posts/${post.post_id}/${postTitle}`)}
+            />
+          );
         })}
       </div>
     </App>

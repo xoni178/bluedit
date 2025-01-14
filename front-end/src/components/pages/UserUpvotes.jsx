@@ -1,37 +1,69 @@
 import { useEffect, useState } from "react";
 import App from "../../App";
 
-import ApiRequest from "../../api/ApiRequest";
+import axios from "axios";
 
 import Post from "../Post";
-
+import Comment from "../Comment";
 //svgs
 import { ReactComponent as UserSvg } from "../../assets/svg/user.svg";
 import { useNavigate, useParams, useLocation } from "react-router-dom";
 
 import { SimpleButton } from "../buttons";
 
+import { useBlueditDataContext } from "../../api/DataContext";
+
 export default function User() {
+  const { paginateNow, SetPaginateNow } = useBlueditDataContext();
+
+  const [isFirstRender, SetIsFirstRender] = useState(true);
+  const [postsAndComments, SetPostsAndComments] = useState([]);
+  const [user, SetUser] = useState([]);
+  const [links, SetLinks] = useState({});
+
   const navigate = useNavigate();
   const location = useLocation();
   const { username } = useParams();
 
-  const [user, SetUser] = useState({});
+  const getData = (nextLink = null) => {
+    if (!nextLink) return;
+
+    axios
+      .get(
+        nextLink === "/"
+          ? `http://127.0.0.1:8000/api/users/${username}/upvotes?page=1`
+          : nextLink
+      )
+      .then((requestData) => {
+        if (requestData?.data?.data?.user) SetUser(requestData.data.data.user);
+
+        if (requestData?.data?.data?.upvoted?.entity) {
+          SetPostsAndComments((prevPosts) => [
+            ...prevPosts,
+            ...requestData.data.data.upvoted.entity,
+          ]);
+        }
+        if (requestData?.data?.data?.links)
+          SetLinks(requestData.data.data.links);
+      })
+      .catch((err) => console.error(err));
+  };
 
   useEffect(() => {
-    ApiRequest.get(`/api/users/${username}`)
-      .then((user) => {
-        console.log(user);
-        SetUser(user.data.data.user);
-      })
-      .catch((err) => {
-        console.error(err);
-      });
-  }, []);
+    if (isFirstRender) {
+      getData("/");
+      SetIsFirstRender(false);
+    }
+
+    if (paginateNow && links.next) {
+      getData(links?.next);
+      SetPaginateNow(false);
+    }
+  }, [paginateNow]);
 
   return (
     <App>
-      <section className="w-full">
+      <section className="w-full flex flex-col  items-center">
         <div className="w-full flex items-center flex-col">
           <div className="w-[60%] h-[200px] flex flex-row justify-center items-center gap-5">
             <div className="flex flex-row justify-center items-center gap-5">
@@ -86,21 +118,24 @@ export default function User() {
             </ul>
           </div>
         </div>
-        <div className="flex flex-col gap-5 mt-14 items-center">
-          {user.posts
-            ? user.posts.map((post, index) => {
-                const postTitle = post.title.replaceAll(" ", "_");
-
-                return (
-                  <Post
-                    key={index}
-                    post={post}
-                    displayUsername={false}
-                    onClick={() =>
-                      navigate(`/posts/${post.post_id}/${postTitle}`)
-                    }
-                  />
-                );
+        <div className="w-[60%] flex flex-col gap-5 mt-14 items-center">
+          {postsAndComments
+            ? postsAndComments.map((entity, index) => {
+                if (entity.type === "post") {
+                  const postTitle = entity.content.replaceAll(" ", "_");
+                  return (
+                    <Post
+                      key={index}
+                      post={entity}
+                      displayUsername={false}
+                      onClick={() =>
+                        navigate(`/posts/${entity.id}/${postTitle}`)
+                      }
+                    />
+                  );
+                } else {
+                  return <Comment key={index} comment={entity} />;
+                }
               })
             : null}
         </div>

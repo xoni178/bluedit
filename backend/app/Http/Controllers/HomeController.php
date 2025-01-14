@@ -24,12 +24,16 @@ class HomeController extends Controller
 
 
         if (Auth::check()) {
+            error_log(Auth::user()->username . "is logged in.");
+
             $total =  Auth::user()->communities()->count();
 
             $randomOffset = mt_rand(0, max(0, $total - 10));
             $randomSubscribedCommunities = Community::offset($randomOffset)->limit(10)->inRandomOrder();
 
             $randomCommunities = $randomCommunities->union($randomSubscribedCommunities);
+        } else {
+            error_log("no log in.");
         }
 
         $communities = $randomCommunities->get();

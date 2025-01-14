@@ -1,18 +1,17 @@
-export default function SimpleButton() {
+export default function SimpleButton({ link, slot, active }) {
   return (
     <a
-      className="
+      className={`
             w-fit
             px-4
             py-2
             rounded-full
             hover:bg-[#192028]
             hover:cursor-pointer
-            bg-[#192028]
-            bg-transparent"
-      href="/"
+            ${active ? "bg-[#192028]" : ""}`}
+      href={link}
     >
-      <p className="text-white">name</p>
+      <p className="text-white">{slot}</p>
     </a>
   );
 }
