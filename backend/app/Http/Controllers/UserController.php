@@ -18,10 +18,6 @@ use Illuminate\Support\Facades\DB;
 
 class UserController extends Controller
 {
-    public function index()
-    {
-        return view("components.pages.register");
-    }
     /**
      * Display specified user
      * 
@@ -106,7 +102,7 @@ class UserController extends Controller
     }
 
 
-    public function create(StoreUserRequest $request)
+    public function store(StoreUserRequest $request)
     {
 
         $validated = $request->validated();
@@ -117,6 +113,6 @@ class UserController extends Controller
 
         return response()->json(["username" => $user->username])
             ->header('Content-Type', 'application/json')
-            ->header('Set-Cookie', "token=" . $token->plainTextToken . "; HttpOnly;");
+            ->withCookie(cookie("token", $token->plainTextToken));
     }
 }

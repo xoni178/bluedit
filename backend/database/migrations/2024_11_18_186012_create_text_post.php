@@ -11,11 +11,10 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create("text_post", function (Blueprint $table) {
+        Schema::create("text_posts", function (Blueprint $table) {
             $table->id();
-            $table->foreignId("post_id");
-            $table->foreign("post_id")->on("posts")->references("id");
             $table->text("body");
+            $table->timestamps();
         });
     }
 
@@ -24,6 +23,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists("text_post");
+        Schema::dropIfExists("text_posts");
     }
 };

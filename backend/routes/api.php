@@ -6,13 +6,6 @@ use Illuminate\Support\Facades\Auth;
 
 use function Laravel\Prompts\error;
 
-Route::get('/user', function (Request $request) {
-
-    if (Auth::check()) {
-        error_log(Auth::user() . " is logged in!");
-    }
-    return $request->user();
-})->middleware('auth:sanctum');
 
 Route::controller(\App\Http\Controllers\HomeController::class)->group(function () {
     Route::get("/", "index");
@@ -26,7 +19,7 @@ Route::controller(\App\Http\Controllers\UserController::class)->group(function (
     Route::get("/users/{username}/upvotes",  "showUpvotes");
 
     //post
-    Route::post("/register",  "create");
+    Route::post("/register",  "store");
 });
 
 
@@ -37,7 +30,7 @@ Route::controller(\App\Http\Controllers\SessionController::class)->group(functio
 });
 
 Route::controller(\App\Http\Controllers\PostController::class)->group(function () {
-    Route::get("/create", "index")->middleware("auth:sanctum");
+    Route::post("/create", "store");
 
     Route::get("/posts/{post_id}", "show");
 });

@@ -7,13 +7,17 @@ import { throttle } from "lodash";
 import ApiRequest from "../api/ApiRequest";
 
 export default function Searchbar() {
-  const [communitiesData, SetCommunitiesData] = useState();
-  const [userData, SetUserData] = useState();
+  const [communitiesData, SetCommunitiesData] = useState(null);
+  const [userData, SetUserData] = useState(null);
 
   //For every change on input value, make query the database
   const handleSearch = throttle((event) => {
     const search = event.target.value;
-    if (search === "") return;
+    if (search === "") {
+      SetCommunitiesData(null);
+      SetUserData(null);
+      return;
+    }
 
     ApiRequest.get("/api/search", {
       params: { search },

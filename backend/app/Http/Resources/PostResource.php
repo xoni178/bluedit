@@ -21,6 +21,8 @@ class PostResource extends JsonResource
             "upvote_count" => $this->upvote_count,
             "downvote_count" => $this->downvote_count,
             "title" => $this->title,
+            "postable_type" => $this->postable_type,
+            "content_resource" => $this->content_resource,
             "comment_count" => $this->comment_count,
             "created_at" => $this->created_at->format("d:m:y-h:m"),
         ];

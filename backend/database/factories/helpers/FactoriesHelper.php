@@ -78,4 +78,11 @@ class FactoriesHelper
             (string)$primaryKey2 => static::RandomPrimaryKey($model2, (string)$primaryKey2),
         ];
     }
+
+    // public static function getRandomVideo(): string{
+
+
+
+    //     return 
+    // }
 }

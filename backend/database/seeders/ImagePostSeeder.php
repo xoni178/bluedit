@@ -2,15 +2,14 @@
 
 namespace Database\Seeders;
 
+use App\Models\ImagePost;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
-//Models 
-use App\Models\Community;
 
 //Traits
 use Database\Seeders\Traits\TruncateTrait;
 
-class CommunitySeeder extends Seeder
+class ImagePostSeeder extends Seeder
 {
     use TruncateTrait;
 
@@ -19,7 +18,7 @@ class CommunitySeeder extends Seeder
      */
     public function run(): void
     {
-        $this->TruncateTable(Community::class);
-        Community::factory(13)->create();
+        $this->TruncateTable(\App\Models\ImagePost::class);
+        \App\Models\ImagePost::factory(25)->create();
     }
 }

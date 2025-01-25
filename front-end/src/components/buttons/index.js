@@ -5,3 +5,4 @@ export { default as FancyButton } from "./FancyButton.jsx";
 export { default as LinkButton } from "./LinkButton.jsx";
 export { default as SimpleButton } from "./SimpleButton.jsx";
 export { default as UpvoteButton } from "./UpvoteButton.jsx";
+export { default as ListButton } from "./ListButton.jsx";

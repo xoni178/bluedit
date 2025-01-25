@@ -11,12 +11,11 @@ use Illuminate\Validation\ValidationException;
 use App\Models\User;
 use Illuminate\Support\Facades\Hash;
 
+use App\Exceptions\InvalidToken;
+use App\Services\UserService;
+
 class SessionController extends Controller
 {
-    public function create()
-    {
-        return response()->json(["invalid credetials"], 200);
-    }
 
     public function store(StoreSessionRequest $request)
     {
@@ -37,24 +36,29 @@ class SessionController extends Controller
         $user = User::where("email", $request->email)->first();
         $token = $user->createToken("token of " . $user->username);
 
-        return response()->json(["username" => $user->username, "currentAccessToken" => $token->accessToken], 200)
+        return response()->json(["username" => $user->username], 200)
             ->header('Content-Type', 'application/json')
-            ->withCookie(cookie('token', $user->currentAccessToken()));
+            ->withCookie(cookie(
+                'token',
+                $token->plainTextToken,
+                60 * 24 * 7,
+                '/',
+                null,
+                false,
+                true,
+                false,
+                'Strict'
+            ));
     }
 
     public function destroy(Request $request)
     {
-        if (!$request->hasCookie("token")) return;
+        if (!$request->hasCookie("token")) throw new InvalidToken("Token not found");
 
 
-        [$id, $token] = explode("|", $request->cookie("token"));
+        $tokenEntity = UserService::validateToken($request->cookie("token"));
 
-        $tokenEntity = DB::table('personal_access_tokens')
-            ->where('id', $id)->first();
-
-        if ($tokenEntity == null) return;
-
-        if ($tokenEntity->token != hash('sha256', $token)) return;
+        if ($tokenEntity === null) throw new InvalidToken("Invalid token");
 
         User::find($tokenEntity->tokenable_id)->tokens()->delete();
 

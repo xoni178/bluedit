@@ -4,6 +4,9 @@ namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
 
+use App\Services\UserService;
+use App\Exceptions\InvalidToken;
+
 class StorePostRequest extends FormRequest
 {
     /**
@@ -11,7 +14,16 @@ class StorePostRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        return false;
+        if (!request()->hasCookie("token")) return false;
+
+        $tokenEntity = UserService::validateToken(request()->cookie("token"));
+
+        if ($tokenEntity === null) {
+            throw new InvalidToken("Invalid token");
+            return false;
+        }
+
+        return true;
     }
 
     /**

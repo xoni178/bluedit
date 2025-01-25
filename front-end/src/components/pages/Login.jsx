@@ -10,7 +10,7 @@ import { useNavigate } from "react-router-dom";
 export default function Login() {
   const { SetAuthUser } = useBlueditDataContext();
   const navigate = useNavigate();
-  const [email, SetEmail] = useState("lance63@example.net");
+  const [email, SetEmail] = useState("eda77@example.org");
   const [password, SetPassword] = useState("password");
 
   const [error, SetError] = useState(null);
@@ -57,7 +57,7 @@ export default function Login() {
               />
 
               <p className="text-xs text-red-500 italic">
-                {error
+                {error && error.email
                   ? error.email.map((err) => {
                       return err;
                     })
@@ -75,7 +75,7 @@ export default function Login() {
                 // required
               />
               <p className="text-xs text-red-500 italic">
-                {error
+                {error && error.password
                   ? error.password.map((err) => {
                       return err;
                     })

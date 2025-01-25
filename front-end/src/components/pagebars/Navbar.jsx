@@ -14,7 +14,7 @@ import { useNavigate } from "react-router-dom";
 
 export default function Navbar() {
   const navigate = useNavigate();
-  const { authUser, SetAuthUser } = useBlueditDataContext();
+  const { authUser, SetAuthUser, SetException } = useBlueditDataContext();
 
   const [isActive, SetIsActive] = useState(false);
 
@@ -22,16 +22,20 @@ export default function Navbar() {
     e.preventDefault();
 
     ApiRequest.get("/sanctum/csrf-cookie").then(() => {
-      ApiRequest.post("/api/logout").then(() => {
-        localStorage.removeItem("authUser");
-        SetAuthUser(null);
-        navigate("/");
-      });
+      ApiRequest.post("/api/logout")
+        .then(() => {
+          SetAuthUser(null);
+          localStorage.removeItem("authUser");
+          navigate("/");
+        })
+        .catch((error) => {
+          SetException(error.response?.data?.message);
+        });
     });
   };
 
   return (
-    <nav className="w-full h-[60px] bg-[#090e13] flex justify-between items-center border-[#192028] border-b px-5 fixed z-10 object-cover">
+    <nav className="w-full h-[60px] bg-[#090e13] flex justify-between items-center border-[#192028] border-b px-5 fixed z-2 object-cover">
       <a
         className="w-[130px] h-full flex justify-center items-center "
         href="/"
@@ -93,7 +97,10 @@ export default function Navbar() {
           </div>
         </div>
       ) : (
-        <FancyButton link="/login" slot="Login" />
+        <div className="flex flex-row items-center gap-5 p-2">
+          <CreateButton />
+          <FancyButton link="/login" slot="Login" />
+        </div>
       )}
     </nav>
   );

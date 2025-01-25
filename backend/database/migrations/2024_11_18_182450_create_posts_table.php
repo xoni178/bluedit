@@ -18,6 +18,8 @@ return new class extends Migration
             $table->string("community_name");
             $table->foreign("community_name")->references("name")->on("communities")->onDelete("cascade");
             $table->string("title", 255);
+            $table->integer("postable_id");
+            $table->enum("postable_type", ["text_post", "video_post", "image_post"]);
             $table->timestamps();
         });
     }

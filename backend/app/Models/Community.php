@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class Community extends Model
 {
-    /** @use HasFactory<\Database\Factories\CommunityFactory> */
+
     use HasFactory;
 
 

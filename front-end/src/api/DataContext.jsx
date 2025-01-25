@@ -8,6 +8,8 @@ export const DataContext = ({ children }) => {
   const [paginateNow, SetPaginateNow] = useState(false);
   const [authUser, SetAuthUser] = useState(null);
 
+  const [exception, SetException] = useState(null);
+
   const getPageHeight = async () => {
     return window.document.body.clientHeight;
   };
@@ -40,7 +42,14 @@ export const DataContext = ({ children }) => {
 
   return (
     <BlueditDataContext.Provider
-      value={{ paginateNow, SetPaginateNow, authUser, SetAuthUser }}
+      value={{
+        paginateNow,
+        SetPaginateNow,
+        authUser,
+        SetAuthUser,
+        exception,
+        SetException,
+      }}
     >
       {children}
     </BlueditDataContext.Provider>

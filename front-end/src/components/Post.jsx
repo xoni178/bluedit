@@ -6,7 +6,7 @@ export default function Post({ post, onClick, displayUsername }) {
     <div
       onClick={!displayUsername ? onClick : null}
       className={
-        "w-[750px] h-[650px] flex flex-col px-3 border-b-[1px] border-[#192028] shadow-md" +
+        "w-[750px] h-fit flex flex-col px-3 border-b-[1px] border-[#192028] shadow-md" +
         (!displayUsername
           ? " hover:cursor-pointer hover:bg-[#192028] hover:rounded-xl"
           : null)
@@ -32,12 +32,36 @@ export default function Post({ post, onClick, displayUsername }) {
         </div>
       </div>
       <div className="w-full px-2">
-        <h1 className="text-2xl text-white">
-          {post.type ? post.content : post.title}
-        </h1>
+        <h1 className="text-2xl text-white">{post.title}</h1>
       </div>
-      <div className="w-full h-[80%] bg-blue-300 my-2 rounded-lg"></div>
-      <div className="w-full h-[5%] flex items-center gap-5">
+      {post.postable_type === "text_post" ? (
+        <div className="w-full h-[100px] my-2 rounded-lg">
+          <p className="text-white">
+            {post.content_resource.slice(0, 300) + "..."}
+          </p>
+        </div>
+      ) : null}
+      {post.postable_type === "image_post" ? (
+        <div className="w-full h-[500px] my-2 rounded-lg">
+          <img
+            src={"http://127.0.0.1:8000" + post.content_resource}
+            alt={post.title}
+            className="w-full h-full object-contain rounded-lg"
+          />
+        </div>
+      ) : null}
+      {post.postable_type === "video_post" ? (
+        <div className="w-full h-[450px] my-2 rounded-lg flex ">
+          <video className="w-full h-full" controls>
+            <source
+              src={"http://127.0.0.1:8000" + post.content_resource}
+              type="video/mp4"
+            ></source>
+          </video>
+        </div>
+      ) : null}
+
+      <div className="w-full h-[30px] flex items-center gap-5 mb-1">
         <div className="flex items-center gap-3 px-3 py-1 bg-[#192028] rounded-full shadow-lg">
           <UpvoteButton />
           <p className="text-white">

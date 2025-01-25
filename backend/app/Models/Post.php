@@ -25,6 +25,17 @@ class Post extends Model
         return $this->users()->where('post_votes.vote_type', 'DOWNVOTE')->count();
     }
 
+    public function getContentResourceAttribute()
+    {
+        if ($this->postable_type === "text_post") {
+            return $this->postable->body;
+        } else if ($this->postable_type === "video_post") {
+            return $this->postable->video_url;
+        } else if ($this->postable_type === "image_post") {
+            return $this->postable->image_url;
+        }
+    }
+
     public function user()
     {
         return $this->belongsTo(User::class, "username", "username");
@@ -33,6 +44,11 @@ class Post extends Model
     public function users()
     {
         return $this->belongsToMany(User::class, "post_votes", "post_id", "username");
+    }
+
+    public function postable()
+    {
+        return $this->morphTo();
     }
 
     public function comments()

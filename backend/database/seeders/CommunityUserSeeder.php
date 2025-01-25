@@ -26,7 +26,7 @@ class CommunityUserSeeder extends Seeder
 
 
 
-        for ($i = 1; $i <= 10; $i++) {
+        for ($i = 1; $i <= 20; $i++) {
 
             $array = FactoriesHelper::getUniquePKValues(User::class, "username", Community::class, "name");
 

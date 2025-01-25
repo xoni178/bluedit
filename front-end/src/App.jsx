@@ -1,17 +1,25 @@
 import { Navbar, Sidebar } from "./components/pagebars";
 
 import { useBlueditDataContext } from "./api/DataContext";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
+import ExceptionsHandeler from "./components/exceptions/ExceptionsHandeler";
 function App({ children }) {
-  const { SetAuthUser } = useBlueditDataContext();
+  const { exception, SetException, SetAuthUser } = useBlueditDataContext();
 
-  useEffect(() => {
-    const info = JSON.parse(localStorage.getItem("authUser"));
-    SetAuthUser(info);
-  }, []);
+  const startCountDown = () => {
+    setTimeout(() => {
+      SetException(null);
+    }, 5000);
+  };
+
+  const handleException = () => {
+    startCountDown();
+    return <ExceptionsHandeler message={"Error: " + exception} />;
+  };
 
   return (
     <div className="h-fit">
+      {exception ? handleException() : null}
       <header>
         <Navbar />
       </header>

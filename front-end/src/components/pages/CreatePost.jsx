@@ -1,35 +1,34 @@
-import App from "../../App";
-import { SimpleButton } from "../buttons";
-
-import ApiRequest from "../../api/ApiRequest";
 import { useEffect, useState } from "react";
+import App from "../../App";
 
-import SearchBar from "../Searchbar";
+import { useBlueditDataContext } from "../../api/DataContext";
+import ApiRequest from "../../api/ApiRequest";
+
+import { ListButton } from "../buttons";
 import CommunitySelector from "../CommunitySelector";
 
 export default function CreatePost() {
-  const [show, SetShow] = useState(false);
-  const [title, SetTittle] = useState(null);
-  const [body, SetBody] = useState(null);
+  const { SetException } = useBlueditDataContext();
+
   const [selectedCommunity, SetSelectedCommunity] = useState();
+  const [title, SetTittle] = useState(null);
+
+  const [postType, SetPostType] = useState(null);
+
+  const [imageFile, SetImageFile] = useState(null);
+  const [videoFile, SetVideoFile] = useState(null);
+  const [body, SetBody] = useState(null);
 
   const onSubmit = (e) => {
     e.preventDefault();
-
-    const authUser = JSON.parse(localStorage.getItem("authUser"));
-
-    ApiRequest.post(
-      "/api/create",
-      {
+    ApiRequest.get("/sanctum/csrf-cookie").then(() => {
+      ApiRequest.post("/api/create", {
         title,
         body,
-      },
-      {
-        headers: {
-          Authorization: `Bearer ${authUser ? authUser.token : null}`,
-        },
-      }
-    );
+      }).catch((error) => {
+        SetException(error.response?.data?.message);
+      });
+    });
   };
 
   return (
@@ -47,31 +46,56 @@ export default function CreatePost() {
           />
         </div>
         <div className="w-[40%] flex gap-4 text-white">
-          <SimpleButton slot={"Text"} />
-          <SimpleButton slot={"Image"} />
-          <SimpleButton slot={"Video"} />
-        </div>
-        <div>
-          <input
-            type="text"
-            name="title"
-            placeholder="Title"
-            className="w-full h-[40px] px-5 py-2 bg-transparent border-[1px] border-[#192028] rounded-full text-white"
-            onChange={(e) => SetTittle(e.target.value)}
+          <ListButton
+            slot={"Text"}
+            onClick={() => SetPostType("text_post")}
+            active={postType === "text_post" ? true : false}
+          />
+          <ListButton
+            slot={"Image"}
+            onClick={() => SetPostType("image_post")}
+            active={postType === "image_post" ? true : false}
+          />
+          <ListButton
+            slot={"Video"}
+            onClick={() => SetPostType("video_post")}
+            active={postType === "video_post" ? true : false}
           />
         </div>
-        <div>
-          <textarea
-            placeholder="Body"
-            name="body"
-            cols="30"
-            rows="10"
-            className="w-full px-5 py-2 bg-transparent border-[1px] border-[#192028] rounded-lg text-white"
-            onChange={(e) => SetBody(e.target.value)}
-          ></textarea>
-        </div>
-        <button type="submit"></button>
-        <button type="submit">Submit</button>
+
+        <form
+          method="post"
+          onSubmit={(e) => onSubmit(e)}
+          className="flex flex-col gap-5 justify-"
+        >
+          <div>
+            <input
+              type="text"
+              name="title"
+              placeholder="Title"
+              className="w-full h-[40px] px-5 py-2 bg-transparent border-[1px] border-[#192028] rounded-full text-white"
+              onChange={(e) => SetTittle(e.target.value)}
+            />
+          </div>
+          <div>
+            <textarea
+              placeholder="Body"
+              name="body"
+              cols="30"
+              rows="10"
+              className="w-full px-5 py-2 bg-transparent border-[1px] border-[#192028] rounded-lg text-white"
+              onChange={(e) => SetBody(e.target.value)}
+            ></textarea>
+          </div>
+          <div>
+            <button
+              type="submit"
+              className="text-white hover:cursor-pointer hover:bg-[#192028] px-4 py-2 rounded"
+            >
+              Submit
+            </button>
+          </div>
+        </form>
       </section>
     </App>
   );

@@ -6,19 +6,12 @@ use App\Models\Post;
 use App\Http\Requests\StorePostRequest;
 use App\Http\Requests\UpdatePostRequest;
 use App\Http\Resources\PostCommentResource;
-use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Http\Request;
 
 class PostController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
-    public function index(Request $request)
-    {
-        return response()->json($request->user());
-    }
-
     /**
      * Show the form for creating a new resource.
      */
@@ -29,7 +22,7 @@ class PostController extends Controller
      */
     public function store(StorePostRequest $request)
     {
-        //
+        error_log("store post");
     }
 
     /**
