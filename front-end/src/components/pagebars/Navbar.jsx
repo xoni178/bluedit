@@ -25,7 +25,8 @@ export default function Navbar() {
       ApiRequest.post("/api/logout")
         .then(() => {
           SetAuthUser(null);
-          localStorage.removeItem("authUser");
+          if (localStorage.hasOwnProperty("authUser"))
+            localStorage.removeItem("authUser");
           navigate("/");
         })
         .catch((error) => {
@@ -35,11 +36,8 @@ export default function Navbar() {
   };
 
   return (
-    <nav className="w-full h-[60px] bg-[#090e13] flex justify-between items-center border-[#192028] border-b px-5 fixed z-2 object-cover">
-      <a
-        className="w-[130px] h-full flex justify-center items-center "
-        href="/"
-      >
+    <nav className="w-full h-[60px] bg-[#090e13] flex justify-between items-center border-[#192028] border-b px-5 fixed object-cover">
+      <a className="w-[130px] h-full flex justify-center items-center" href="/">
         <div className="w-full h-full flex justify-center items-center">
           <img
             className=" object-contain w-[80%] h-[80%]"
@@ -53,11 +51,10 @@ export default function Navbar() {
           </p>
         </div>
       </a>
-      <Searchbar />
 
       {authUser ? (
         <div>
-          <div className="flex flex-row items-center gap-5 p-2">
+          <div className="flex flex-row items-center gap-5 p-2 z-5">
             <CreateButton />
             <div className="hover:cursor-pointer">
               <div

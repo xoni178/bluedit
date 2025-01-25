@@ -18,11 +18,11 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { useBlueditDataContext } from "../api/DataContext";
 
 const AllRoutes = () => {
-  const { authUser, SetAuthUser } = useBlueditDataContext();
+  const { SetAuthUser } = useBlueditDataContext();
   const [isAuthorized, SetIsAuthorized] = useState(null);
 
   useEffect(() => {
-    if (localStorage.getItem("authUser")) {
+    if (localStorage.hasOwnProperty("authUser")) {
       SetAuthUser(JSON.parse(localStorage.getItem("authUser")));
       SetIsAuthorized(true);
     } else {

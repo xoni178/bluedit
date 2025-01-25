@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { ReactComponent as SearchSvg } from "../assets/svg/search.svg";
 import { ReactComponent as UserSvg } from "../assets/svg/user.svg";
 
@@ -6,7 +6,10 @@ import { throttle } from "lodash";
 
 import ApiRequest from "../api/ApiRequest";
 
-export default function Searchbar() {
+export default function Searchbar({
+  SetIsSearchDropdownActive,
+  isSearchDropdownActive,
+}) {
   const [communitiesData, SetCommunitiesData] = useState(null);
   const [userData, SetUserData] = useState(null);
 
@@ -33,12 +36,23 @@ export default function Searchbar() {
       });
   }, 1000);
 
+  useEffect(() => {
+    if (
+      (communitiesData && communitiesData.length !== 0) ||
+      (userData && userData.length !== 0)
+    ) {
+      SetIsSearchDropdownActive(true);
+    } else {
+      SetIsSearchDropdownActive(false);
+    }
+  }, [communitiesData, userData]);
+
   return (
-    <div className="flex flex-col h-fit relative">
+    <div className="w-[250px] fixed flex flex-col h-fit z-5 top-[8px] mx-auto left-0 right-0">
       <div
         className={
-          "flex flex-row items-center gap-3 border-[#192028] border-[1px] rounded-t-3xl pr-10 pl-5 py-2 " +
-          (communitiesData || userData ? "" : "rounded-b-3xl")
+          "flex flex-row items-center gap-3 bg-[#090e13] border-[#192028] border-[1px] rounded-t-3xl pr-10 pl-5 py-2 " +
+          (isSearchDropdownActive ? "" : "rounded-b-3xl")
         }
       >
         <div className=" ">
@@ -54,10 +68,11 @@ export default function Searchbar() {
           />
         </form>
       </div>
+
       <div
         className={
-          "w-full h-fit absolute px-5 pb-5 pt-2 top-[40px] bg-[#090e13] border-[#192028] border-[1px] rounded-b-3xl " +
-          (communitiesData || userData ? "block" : "hidden")
+          "w-full absolute top-[40px] h-fit px-5 pb-5 pt-2 bg-[#090e13] border-[#192028] border-[1px] rounded-b-3xl " +
+          (isSearchDropdownActive ? "block" : "hidden")
         }
       >
         {communitiesData ? (
