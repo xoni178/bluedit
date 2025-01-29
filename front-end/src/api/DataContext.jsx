@@ -9,6 +9,7 @@ export const DataContext = ({ children }) => {
   const [authUser, SetAuthUser] = useState(null);
 
   const [exception, SetException] = useState(null);
+  const [success, SetSuccess] = useState(null);
 
   const getPageHeight = async () => {
     return window.document.body.clientHeight;
@@ -22,8 +23,8 @@ export const DataContext = ({ children }) => {
   const checkIfNeedPagination = async (scrollPosition) => {
     const PageHeight = await getPageHeight();
 
-    let pageScrollEdge = (7 / 10) * PageHeight;
-
+    let pageScrollEdge = (4 / 10) * PageHeight;
+    console.log(pageScrollEdge, PageHeight, scrollPosition);
     if (scrollPosition >= pageScrollEdge && !paginateNow) {
       SetPaginateNow(true);
     }
@@ -49,6 +50,8 @@ export const DataContext = ({ children }) => {
         SetAuthUser,
         exception,
         SetException,
+        success,
+        SetSuccess,
       }}
     >
       {children}

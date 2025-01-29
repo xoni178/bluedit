@@ -9,6 +9,8 @@ use Illuminate\Support\Facades\Validator;
 
 use Illuminate\Contracts\Database\Eloquent\Builder;
 
+use App\Http\Resources\PostResource;
+
 
 class CommunityController extends Controller
 {
@@ -52,14 +54,20 @@ class CommunityController extends Controller
                 "users AS downvote_count" => function (Builder $query) {
                     $query->where("vote_type", "DOWNVOTE");
                 }
-            ])->paginate(7);
+            ])->paginate(5);
 
+            return response()
+                ->json([
+                    "community" => $community,
+                    "posts" =>  PostResource::collection($posts),
+                    "links" => [
+                        "next" => $posts->nextPageUrl(),
+                    ]
 
-
-            return response()->view("components.pages.community", ["community" => $community, "posts" =>  $posts], 200);
+                ], 200);
         } catch (\Illuminate\Database\Eloquent\ModelNotFoundException $err) {
 
-            return response()->view("components.exceptions.not-found", ["name" => "community"], 404);
+            return response()->json(["message" => "Not found!"], 404);
         }
     }
 

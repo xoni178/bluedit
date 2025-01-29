@@ -3,12 +3,16 @@
 namespace App\Http\Controllers;
 
 use App\Models\Post;
+use App\Models\User;
+
+use App\Exceptions\InvalidToken;
+use App\Services\UserService;
+
 use App\Http\Requests\StorePostRequest;
 use App\Http\Requests\UpdatePostRequest;
 use App\Http\Resources\PostCommentResource;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Log;
-use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
 
 class PostController extends Controller
 {
@@ -22,7 +26,57 @@ class PostController extends Controller
      */
     public function store(StorePostRequest $request)
     {
-        error_log("store post");
+        //validate input data
+        $validated = $request->validated();
+
+        //validate authication
+        $token = $request->hasCookie("token") ? $request->cookie("token") : null;
+
+        if (!$token) throw new InvalidToken("Not Logged in", 401);
+
+        $tokenEntity = UserService::validateToken($token);
+
+        if ($tokenEntity === null) throw new InvalidToken("Invalid token");
+
+
+
+        $user = User::findOrFail($tokenEntity->tokenable_id);
+
+        //create post type
+        if ($request->postable_type === "text_post") {
+            $textPost = \App\Models\TextPost::create([
+                "body" => $validated["body"],
+            ]);
+        } else if ($request->postable_type === "image_post") {
+
+            $path = $request->file('image')->store('images', 'public');
+
+            if ($path) {
+
+                $imagePost = \App\Models\ImagePost::create([
+                    "image_url" => "/storage/" . $path,
+                ]);
+            }
+        } else if ($request->postable_type === "video_post") {
+            $path = $request->file('video')->store('videos', 'public');
+
+            if ($path) {
+                $videoPost = \App\Models\VideoPost::create([
+                    "video_url" => "/storage/" . $path,
+                ]);
+            }
+        }
+
+        //create post
+        $post = Post::create([
+            "username" => $user->username,
+            "community_name" => $validated["community_name"],
+            "title" => $validated["title"],
+            "postable_id" => $textPost->id ?? $imagePost->id ?? $videoPost->id,
+            "postable_type" => $request->postable_type,
+        ]);
+
+        return response()->json(["post_id" => $post->id], 201);
     }
 
     /**

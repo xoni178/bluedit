@@ -10,6 +10,14 @@ class Post extends Model
     /** @use HasFactory<\Database\Factories\PostFactory> */
     use HasFactory;
 
+    protected $fillable = [
+        "username",
+        "community_name",
+        "title",
+        "postable_id",
+        "postable_type",
+    ];
+
     public function getCommentCountAttribute()
     {
         return $this->comments()->count();

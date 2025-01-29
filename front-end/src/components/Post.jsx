@@ -2,6 +2,7 @@ import { LinkButton, UpvoteButton, DownvoteButton } from "./buttons";
 import { ReactComponent as CommentSvg } from "../assets/svg/comment.svg";
 
 export default function Post({ post, onClick, displayUsername }) {
+  const HOST = process.env.REACT_APP_API_HOST;
   return (
     <div
       onClick={!displayUsername ? onClick : null}
@@ -44,7 +45,7 @@ export default function Post({ post, onClick, displayUsername }) {
       {post.postable_type === "image_post" ? (
         <div className="w-full h-[500px] my-2 rounded-lg">
           <img
-            src={"http://127.0.0.1:8000" + post.content_resource}
+            src={HOST + post.content_resource}
             alt={post.title}
             className="w-full h-full object-contain rounded-lg"
           />
@@ -54,7 +55,7 @@ export default function Post({ post, onClick, displayUsername }) {
         <div className="w-full h-[450px] my-2 rounded-lg flex ">
           <video className="w-full h-full" controls>
             <source
-              src={"http://127.0.0.1:8000" + post.content_resource}
+              src={HOST + post.content_resource}
               type="video/mp4"
             ></source>
           </video>

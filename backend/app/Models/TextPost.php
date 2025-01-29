@@ -9,6 +9,8 @@ class TextPost extends Model
 {
     use HasFactory;
 
+    protected $fillable = ['body'];
+
     public function post()
     {
         return $this->morphOne(Post::class, 'postable');

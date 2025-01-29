@@ -17,12 +17,14 @@ export default function User() {
   const { username } = useParams();
 
   const [user, SetUser] = useState({});
+  const [posts, SetPosts] = useState([]);
 
   useEffect(() => {
     ApiRequest.get(`/api/users/${username}`)
       .then((user) => {
         console.log(user);
-        SetUser(user.data.data.user);
+        SetUser(user?.data?.data?.user);
+        SetPosts(user?.data?.data?.posts);
       })
       .catch((err) => {
         console.error(err);
@@ -87,8 +89,8 @@ export default function User() {
           </div>
         </div>
         <div className="flex flex-col gap-5 mt-14 items-center">
-          {user.posts
-            ? user.posts.map((post, index) => {
+          {posts
+            ? posts.map((post, index) => {
                 const postTitle = post.title.replaceAll(" ", "_");
 
                 return (

@@ -49,7 +49,7 @@ export default function User() {
             <h1 className="text-white text-3xl font-bold">Register</h1>
           </div>
 
-          <div className="w-full flex flex-row gap-5">
+          <div className="w-full flex flex-row gap-5 mt-3">
             <div className="w-full  flex flex-col justify-start">
               <span className="text-sm text-white">Username</span>
               <input
@@ -92,7 +92,7 @@ export default function User() {
             </div>
           </div>
 
-          <div className="w-full flex flex-row gap-5">
+          <div className="w-full flex flex-row gap-5 mt-3">
             <div className="w-[50%] flex flex-col justify-start">
               <span className="text-sm text-white">Password</span>
               <input
@@ -135,7 +135,7 @@ export default function User() {
             </div>
           </div>
 
-          <div className="flex justify-between">
+          <div className="flex justify-between mt-3">
             <div className="w-[74px]">
               <button
                 type="submit"

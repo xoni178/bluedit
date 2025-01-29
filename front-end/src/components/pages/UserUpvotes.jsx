@@ -25,16 +25,19 @@ export default function User() {
   const location = useLocation();
   const { username } = useParams();
 
+  const HOST = process.env.REACT_APP_API_HOST;
+
   const getData = (nextLink = null) => {
     if (!nextLink) return;
 
     axios
       .get(
         nextLink === "/"
-          ? `http://127.0.0.1:8000/api/users/${username}/upvotes?page=1`
+          ? `${HOST}/api/users/${username}/upvotes?page=1`
           : nextLink
       )
       .then((requestData) => {
+        console.log(requestData);
         if (requestData?.data?.data?.user) SetUser(requestData.data.data.user);
 
         if (requestData?.data?.data?.upvoted?.entity) {

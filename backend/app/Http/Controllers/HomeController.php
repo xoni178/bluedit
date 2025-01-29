@@ -44,7 +44,7 @@ class HomeController extends Controller
         $posts = Post::whereIn("community_name", $communities->pluck("name"))
             ->offset($randomOffset)
             ->limit($randomValue)
-            ->inRandomOrder()->paginate(10);
+            ->inRandomOrder()->paginate(5);
 
         return PostResource::collection($posts);
     }

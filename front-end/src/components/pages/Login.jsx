@@ -10,7 +10,7 @@ import { useNavigate } from "react-router-dom";
 export default function Login() {
   const { SetAuthUser } = useBlueditDataContext();
   const navigate = useNavigate();
-  const [email, SetEmail] = useState("eda77@example.org");
+  const [email, SetEmail] = useState("aondricka@example.net");
   const [password, SetPassword] = useState("password");
 
   const [error, SetError] = useState(null);
@@ -84,7 +84,7 @@ export default function Login() {
             </div>
           </div>
 
-          <div className="flex justify-between w-[50%]">
+          <div className="flex justify-between w-[50%] mt-3">
             <div className="w-[74px]">
               <button
                 type="submit"

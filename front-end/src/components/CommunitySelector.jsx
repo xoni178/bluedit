@@ -1,20 +1,17 @@
 import { useEffect, useState } from "react";
 import { ReactComponent as SearchSvg } from "../assets/svg/search.svg";
-import { ReactComponent as UserSvg } from "../assets/svg/user.svg";
 
 import { throttle } from "lodash";
 
 import ApiRequest from "../api/ApiRequest";
 
-export default function CommunitySelector({
-  setSelectedCommunity,
-  selectedCommunity,
-}) {
+export default function CommunitySelector({ setSelectedCommunity }) {
   const [communitiesData, SetCommunitiesData] = useState();
+  const [search, SetSearch] = useState("");
 
   //For every change on input value, make query the database
   const handleSearch = throttle((event) => {
-    const search = event.target.value;
+    SetSearch(event.target.value);
     if (search === "") {
       SetCommunitiesData(null);
       return;
@@ -32,6 +29,12 @@ export default function CommunitySelector({
         console.error(err);
       });
   }, 1000);
+
+  const handleCommunitySelect = (community) => {
+    setSelectedCommunity(community);
+    SetSearch(community.name);
+    SetCommunitiesData(null);
+  };
 
   return (
     <div className="flex flex-col h-fit relative">
@@ -51,13 +54,14 @@ export default function CommunitySelector({
             name="search"
             placeholder="Select Community"
             className=" bg-transparent outline-none text-white"
-            value={selectedCommunity}
+            value={search}
+            required
           />
         </form>
       </div>
       <div
         className={
-          "w-full h-fit absolute px-5 pb-5 pt-2 top-[40px] bg-[#090e13] border-[#192028] border-[1px] rounded-b-3xl " +
+          "w-full h-fit absolute px-5 pt-2 top-[40px] bg-[#090e13] border-[#192028] border-[1px] rounded-b-3xl " +
           (communitiesData ? "block" : "hidden")
         }
       >
@@ -68,8 +72,8 @@ export default function CommunitySelector({
                 return (
                   <div
                     key={index}
-                    className="flex flex-row gap-2"
-                    onClick={() => setSelectedCommunity(community)}
+                    className="flex flex-row gap-2 hover:bg-[#192028] p-2 rounded-lg cursor-pointer"
+                    onClick={() => handleCommunitySelect(community)}
                   >
                     <div className="bg-[#192028] w-[32px] h-[32px] rounded-full"></div>
                     <p className="text-white">{community.name}</p>

@@ -9,6 +9,8 @@ class VideoPost extends Model
 {
     use HasFactory;
 
+    protected $fillable = ['video_url'];
+
     public function post()
     {
         return $this->morphOne(Post::class, 'postable');

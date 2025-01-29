@@ -9,6 +9,8 @@ class ImagePost extends Model
 {
     use HasFactory;
 
+    protected $fillable = ['image_url'];
+
     public function post()
     {
         return $this->morphOne(Post::class, 'postable');

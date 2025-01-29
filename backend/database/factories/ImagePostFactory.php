@@ -12,7 +12,7 @@ class ImagePostFactory extends Factory
 {
     private function fetchRandomImage()
     {
-        $files = Storage::disk('public')->files("images");
+        $files = Storage::disk('public')->files("images/fake");
 
         if (count($files) === 0) return "";
 
