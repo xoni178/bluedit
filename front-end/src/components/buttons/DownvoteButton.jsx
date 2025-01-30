@@ -1,17 +1,10 @@
-import { ReactComponent as DownvoteSvg } from "../../assets/svg/upvote.svg";
+import { ReactComponent as DownvoteSvg } from "../../assets/svg/downvote.svg";
+import { ReactComponent as DownvotedSvg } from "../../assets/svg/downvoted.svg";
 
-export default function DownvoteButton() {
+export default function DownvoteButton({ onClick, downvoted }) {
   return (
-    <button>
-      <DownvoteSvg />
+    <button onClick={onClick}>
+      {downvoted ? <DownvotedSvg /> : <DownvoteSvg />}
     </button>
   );
-}
-{
-  /* <script>
-    function onClick(e) {
-        e.stopPropagation()
-        console.log(21212)
-    }
-</script> */
 }

@@ -1,7 +1,7 @@
-export default function CreateButton() {
+export default function CreateButton({ community }) {
   return (
     <a
-      href="/create"
+      href={"/create" + (community ? `?community=${community}` : "")}
       className="w-[125px] h-[40px] bg-transparent flex justify-center items-center gap-3 hover:bg-[#192028] hover:cursor-pointer rounded-2xl"
     >
       <span>

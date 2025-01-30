@@ -4,10 +4,11 @@ namespace App\Http\Controllers;
 
 use App\Models\Community;
 use App\Http\Requests\StoreCommunityRequest;
-use App\Exceptions\InvalidToken;
+use App\Http\Requests\ShowCommunityRequest;
+use Illuminate\Http\Request;
 use App\Services\UserService;
 
-use App\Models\User;
+
 
 use Illuminate\Contracts\Database\Eloquent\Builder;
 
@@ -36,7 +37,7 @@ class CommunityController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show($community_name)
+    public function show(ShowCommunityRequest $request, $community_name)
     {
         try {
             $community = Community::findOrFail($community_name);
@@ -49,6 +50,15 @@ class CommunityController extends Controller
                     $query->where("vote_type", "DOWNVOTE");
                 }
             ])->paginate(5);
+
+            if ($request->hasCookie("token")) {
+
+                $token = request()->cookie("token");
+                $user = UserService::authenticateUser($token);
+                $community->isSubscribed = $user->communities()->where("name", $community->name)->exists();
+            } else {
+                $community->isSubscribed = false;
+            }
 
             return response()
                 ->json([
@@ -69,25 +79,38 @@ class CommunityController extends Controller
     {
         $request = request();
 
-        //validate authication
+        //validate authentication
         $token = $request->hasCookie("token") ? $request->cookie("token") : null;
 
-        if (!$token) throw new InvalidToken("Not Logged in", 401);
+        $user = UserService::authenticateUser($token);
 
-        $tokenEntity = UserService::validateToken($token);
-
-        if ($tokenEntity === null) throw new InvalidToken("Invalid token");
-
-        //validate community name existence
+        //validate community existence
         $validated = $request->validate([
             "community_name" => "required|string|exists:communities,name"
         ]);
 
-        $user = User::FindOrFail($tokenEntity->tokenable_id);
+        $isSubscriptied = $user->communities()->where("name", $validated["community_name"])->exists();
 
-        $user->communities()->attach($validated["community_name"]);
+        if (!$isSubscriptied) $user->communities()->attach($validated["community_name"]);
     }
+    public function leave()
+    {
+        $request = request();
 
+        //validate authentication
+        $token = $request->hasCookie("token") ? $request->cookie("token") : null;
+
+        $user = UserService::authenticateUser($token);
+
+        //validate community existence
+        $validated = $request->validate([
+            "community_name" => "required|string|exists:communities,name"
+        ]);
+
+        $isSubscriptied = $user->communities()->where("name", $validated["community_name"])->exists();
+
+        if ($isSubscriptied) $user->communities()->detach($validated["community_name"]);
+    }
     /**
      * Remove the specified resource from storage.
      */

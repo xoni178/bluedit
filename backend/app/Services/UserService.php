@@ -2,8 +2,7 @@
 
 namespace App\Services;
 
-use App\Http\Resources\PostResource;
-use App\Http\Resources\CommentResource;
+use App\Exceptions\InvalidToken;
 use Illuminate\Support\Facades\DB;
 use App\Models\User;
 
@@ -34,5 +33,22 @@ class UserService
         if ($tokenEntity->token != hash('sha256', $token)) return null;
 
         return $tokenEntity;
+    }
+
+    /**
+     * Authenticate user
+     * 
+     * @param string $token
+     * @return object|null returns the user object
+     */
+    public static function authenticateUser($token): User|null
+    {
+        if (!$token) throw new InvalidToken("Not Logged in", 401);
+
+        $tokenEntity = UserService::validateToken($token);
+
+        if ($tokenEntity === null) throw new InvalidToken("Invalid token");
+
+        return User::findOrFail($tokenEntity->tokenable_id);
     }
 }

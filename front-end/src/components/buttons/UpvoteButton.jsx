@@ -1,18 +1,10 @@
 import { ReactComponent as UpvoteSvg } from "../../assets/svg/upvote.svg";
+import { ReactComponent as UpvotedSvg } from "../../assets/svg/upvoted.svg";
 
-export default function SimpleButton() {
+export default function UpvoteButton({ onClick, upvoted }) {
   return (
-    <button>
-      <UpvoteSvg />
+    <button onClick={onClick} className="z-[10]">
+      {upvoted ? <UpvotedSvg /> : <UpvoteSvg />}
     </button>
   );
-}
-
-{
-  /* <script>
-    function test(e) {
-        e.stopPropagation()
-        console.log(2)
-    }
-</script> */
 }

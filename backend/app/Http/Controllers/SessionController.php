@@ -55,12 +55,11 @@ class SessionController extends Controller
     {
         if (!$request->hasCookie("token")) throw new InvalidToken("Token not found");
 
+        $token = $request->cookie("token");
 
-        $tokenEntity = UserService::validateToken($request->cookie("token"));
+        $user = UserService::authenticateUser($token);
 
-        if ($tokenEntity === null) throw new InvalidToken("Invalid token");
-
-        User::find($tokenEntity->tokenable_id)->tokens()->delete();
+        $user->tokens()->delete();
 
         return response()->json(['message' => 'Logged out'])->withCookie(cookie()->forget('token'));
     }

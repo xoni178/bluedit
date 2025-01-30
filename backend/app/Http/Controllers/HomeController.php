@@ -10,7 +10,7 @@ use App\Models\Post;
 use App\Models\User;
 
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
+use App\Services\UserService;
 
 class HomeController extends Controller
 {
@@ -22,19 +22,12 @@ class HomeController extends Controller
         $randomCommunities = Community::offset($randomOffset)->limit(10)->inRandomOrder();
 
 
-
-        // if (Auth::check()) {
-        //     error_log(Auth::user()->username . "is logged in.");
-
-        //     $total =  Auth::user()->communities()->count();
-
-        //     $randomOffset = mt_rand(0, max(0, $total - 10));
-        //     $randomSubscribedCommunities = Community::offset($randomOffset)->limit(10)->inRandomOrder();
-
-        //     $randomCommunities = $randomCommunities->union($randomSubscribedCommunities);
-        // } else {
-        //     error_log("no log in.");
-        // }
+        if (request()->hasCookie("token")) {
+            $token = request()->cookie("token");
+            $user = UserService::authenticateUser($token);
+        } else {
+            error_log("no log in.");
+        }
 
         $communities = $randomCommunities->get();
 
@@ -48,8 +41,9 @@ class HomeController extends Controller
             ->limit($randomValue)
             ->inRandomOrder()
             ->paginate(5)
-            ->through(function ($post) use ($communitiesByName) {
+            ->through(function ($post) use ($communitiesByName, $user) {
                 $post->community = $communitiesByName[$post->community_name];
+                $post->vote = $user ? ($user->posts_voted()->where("post_id", $post->post_id)->first())?->vote_type : null;
                 return $post;
             });;
 
@@ -58,16 +52,34 @@ class HomeController extends Controller
 
     public function search(Request $request)
     {
-        $query = $request->input("search");
-
-        $communities = Community::where("name", "LIKE", $query . "%")->limit(5)->get();
-
-        $users = User::where("username", "LIKE", $query . "%")->limit(5)->get();
+        $input = $request->all();
 
 
-        return response()->json([
-            "communities" => CommunityResource::collection($communities),
-            "users" => UserResource::collection($users)
-        ]);
+        if (array_key_exists("find", $input)) {
+            $query = $input["find"];
+
+            $validated = $request->validate([
+                'find' => 'required|string|exists:communities,name'
+            ]);
+
+            $communities = Community::findOrFail($validated["find"]);
+
+            return response()->json([
+                "communities" => new CommunityResource($communities)
+            ]);
+        } else {
+
+            $query =  $input["search"];
+
+            $communities = Community::where("name", "LIKE", $query . "%")->limit(5)->get();
+
+            $users = User::where("username", "LIKE", $query . "%")->limit(5)->get();
+
+
+            return response()->json([
+                "communities" => CommunityResource::collection($communities),
+                "users" => UserResource::collection($users)
+            ]);
+        }
     }
 }

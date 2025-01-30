@@ -20,7 +20,7 @@ export default function Community() {
   const [links, SetLinks] = useState({});
   const [communityData, SetCommunityData] = useState("");
 
-  const [isJoined, setIsJoined] = useState(false);
+  const [isSubscribed, SetIsSubscribed] = useState(false);
 
   const [showMessage, setShowMessage] = useState(false);
 
@@ -32,15 +32,24 @@ export default function Community() {
     setShowMessage(false);
 
     axios
-      .get(nextLink === "/" ? `${HOST}/api/r/${community}?page=1` : nextLink)
+      .get(nextLink === "/" ? `${HOST}/api/r/${community}?page=1` : nextLink, {
+        headers: {
+          Accept: "application/json",
+          "X-Requested-With": "XMLHttpRequest",
+        },
+        withCredentials: true,
+      })
       .then((response) => {
         console.log(response);
         SetPosts((prevPosts) => [...prevPosts, ...response?.data?.posts]);
         SetLinks(response?.data?.links);
         SetCommunityData(response?.data?.community);
 
-        if (posts.length === 0) {
+        if (response?.data?.posts.length === 0) {
           setShowMessage(true);
+        }
+        if (response?.data?.community?.isSubscribed) {
+          SetIsSubscribed(true);
         }
       })
       .catch((err) => console.error(err));
@@ -58,13 +67,25 @@ export default function Community() {
     }
   }, [paginateNow]);
 
-  const handleJoin = () => {
+  const handleSubscription = () => {
     ApiRequest.post(`api/community/join`, {
       community_name: communityData.name,
     })
       .then((response) => {
         if (response.status === 200) {
-          setIsJoined(true);
+          SetIsSubscribed(true);
+        }
+      })
+      .catch((err) => console.error(err));
+  };
+
+  const handleUnSubscription = () => {
+    ApiRequest.post(`api/community/leave`, {
+      community_name: communityData.name,
+    })
+      .then((response) => {
+        if (response.status === 200) {
+          SetIsSubscribed(false);
         }
       })
       .catch((err) => console.error(err));
@@ -101,18 +122,18 @@ export default function Community() {
               </div>
             </div>
             <div className="flex flex-row gap-6">
-              <CreateButton />
-              {isJoined ? (
+              <CreateButton community={communityData?.name} />
+              {isSubscribed ? (
                 <button
                   className="bg-gray-500 text-white px-4 py-2 rounded-lg"
-                  onClick={() => handleJoin()}
+                  onClick={() => handleUnSubscription()}
                 >
                   Joined
                 </button>
               ) : (
                 <button
                   className="bg-blue-500 text-white px-4 py-2 rounded-lg"
-                  onClick={() => handleJoin()}
+                  onClick={() => handleSubscription()}
                 >
                   Join
                 </button>

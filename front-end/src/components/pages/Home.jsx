@@ -29,13 +29,19 @@ export default function Home() {
     setShowMessage(false);
 
     axios
-      .get(nextLink === "/" ? `${HOST}/api?page=1` : nextLink)
-      .then((posts) => {
-        console.log(posts?.data?.data);
-        SetPosts((prevPosts) => [...prevPosts, ...posts?.data?.data]);
-        SetLinks(posts?.data?.links);
+      .get(nextLink === "/" ? `${HOST}/api?page=1` : nextLink, {
+        headers: {
+          Accept: "application/json",
+          "X-Requested-With": "XMLHttpRequest",
+        },
+        withCredentials: true,
+      })
+      .then((response) => {
+        console.log(response);
+        SetPosts((prevPosts) => [...prevPosts, ...response?.data?.data]);
+        SetLinks(response?.data?.links);
 
-        if (posts.length === 0) {
+        if (response?.data?.posts?.length === 0) {
           setShowMessage(true);
         }
       })

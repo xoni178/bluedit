@@ -3,16 +3,13 @@
 namespace App\Http\Controllers;
 
 use App\Models\Post;
-use App\Models\User;
 
-use App\Exceptions\InvalidToken;
+use Illuminate\Http\Request;
 use App\Services\UserService;
 
 use App\Http\Requests\StorePostRequest;
 use App\Http\Requests\UpdatePostRequest;
 use App\Http\Resources\PostCommentResource;
-use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Storage;
 
 class PostController extends Controller
 {
@@ -32,15 +29,8 @@ class PostController extends Controller
         //validate authication
         $token = $request->hasCookie("token") ? $request->cookie("token") : null;
 
-        if (!$token) throw new InvalidToken("Not Logged in", 401);
+        $user = UserService::authenticateUser($token);
 
-        $tokenEntity = UserService::validateToken($token);
-
-        if ($tokenEntity === null) throw new InvalidToken("Invalid token");
-
-
-
-        $user = User::findOrFail($tokenEntity->tokenable_id);
 
         //create post type
         if ($request->postable_type === "text_post") {
@@ -49,7 +39,7 @@ class PostController extends Controller
             ]);
         } else if ($request->postable_type === "image_post") {
 
-            $path = $request->file('image')->store('images', 'public');
+            $path = $request->file("image")->store("images", "public");
 
             if ($path) {
 
@@ -58,7 +48,7 @@ class PostController extends Controller
                 ]);
             }
         } else if ($request->postable_type === "video_post") {
-            $path = $request->file('video')->store('videos', 'public');
+            $path = $request->file("video")->store("videos", "public");
 
             if ($path) {
                 $videoPost = \App\Models\VideoPost::create([
@@ -86,12 +76,66 @@ class PostController extends Controller
     {
         try {
             $post = Post::FindOrFail($post_id);
+            if (request()->hasCookie("token")) {
+                $token = request()->cookie("token");
+                $user = UserService::authenticateUser($token);
+            } else {
+                error_log("no log in.");
+            }
+
+            $post->vote = $user ? ($user->posts_voted()->where("post_id", $post->post_id)->first())?->vote_type : null;
+
+
 
             return new PostCommentResource(["post" => $post, "comments" => $post->comments]);
         } catch (\Illuminate\Database\Eloquent\ModelNotFoundException $err) {
 
             return response()->json(["error" => "Not found"],  404);
         }
+    }
+
+    public function upvote(Request $request)
+    {
+        $token = $request->hasCookie("token") ? $request->cookie("token") : null;
+
+        $user = UserService::authenticateUser($token);
+
+        $post = Post::findOrFail($request->post_id);
+
+        $upvoteExists = $post->users()->where("users.username", $user->username)->where("post_votes.vote_type", "UPVOTE")->exists();
+
+        if (!$upvoteExists) {
+
+            $post->users()->syncWithoutDetaching([
+                $user->username => ["vote_type" => "UPVOTE", "created_at" => now(), "updated_at" => now()]
+            ]);
+        } else {
+            $post->users()->detach($user->username);
+        }
+
+        return response(null, 200);
+    }
+
+    public function downvote(Request $request)
+    {
+        $token = $request->hasCookie("token") ? $request->cookie("token") : null;
+
+        $user = UserService::authenticateUser($token);
+
+        $post = Post::findOrFail($request->post_id);
+
+        $downvoteExits = $post->users()->where("users.username", $user->username)->where("post_votes.vote_type", "DOWNVOTE")->exists();
+
+        if (!$downvoteExits) {
+
+            $post->users()->syncWithoutDetaching([
+                $user->username => ["vote_type" => "DOWNVOTE", "created_at" => now(), "updated_at" => now()]
+            ]);
+        } else {
+            $post->users()->detach($user->username);
+        }
+
+        return response(null, 200);
     }
 
     /**

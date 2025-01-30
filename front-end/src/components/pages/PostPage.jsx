@@ -18,9 +18,12 @@ export default function PostPage() {
   useEffect(() => {
     const postId = location.pathname.split("/")[2];
 
-    ApiRequest.get(`api/posts/${postId}`).then((postData) => {
-      SetPost(postData.data.data);
-    });
+    ApiRequest.get(`api/posts/${postId}`)
+      .then((response) => {
+        console.log(response);
+        SetPost(response?.data?.data);
+      })
+      .catch((err) => console.error(err));
   }, []);
 
   return (
@@ -29,7 +32,7 @@ export default function PostPage() {
         <div
           onClick={() => {
             const prevPath = location.state?.previousPath || "/";
-            navigate(prevPath);
+            navigate(prevPath, { replace: true });
           }}
           className="w-[32px] h-[32px] flex flex-row justify-center items-center mt-[5px] rounded-full bg-[#192028] hover:cursor-pointer"
         >

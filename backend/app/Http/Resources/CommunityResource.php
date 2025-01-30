@@ -19,6 +19,8 @@ class CommunityResource extends JsonResource
             "description" => $this->desc,
             "icon_url" => $this->icon_url,
             "banner_url" => $this->banner_url,
+            "created_at" => $this->created_at,
+            "updated_at" => $this->updated_at,
         ];
     }
 }

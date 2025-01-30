@@ -10,8 +10,6 @@ class Post extends Model
     /** @use HasFactory<\Database\Factories\PostFactory> */
     use HasFactory;
 
-    protected $appends = ['content_resource'];
-
     protected $fillable = [
         "username",
         "community_name",
@@ -46,6 +44,18 @@ class Post extends Model
         }
     }
 
+    public function getVoteAttribute()
+    {
+        if (request()->hasCookie("token")) {
+            $token = request()->cookie("token");
+            $user = \App\Services\UserService::authenticateUser($token);
+            $entity = $this->users()->where('post_votes.username', '=', $user->username)->first();
+            return $entity ? $entity->pivot->vote_type : null;
+        } else {
+            return null;
+        }
+    }
+
     public function user()
     {
         return $this->belongsTo(User::class, "username", "username");
@@ -53,7 +63,7 @@ class Post extends Model
 
     public function users()
     {
-        return $this->belongsToMany(User::class, "post_votes", "post_id", "username");
+        return $this->belongsToMany(User::class, "post_votes", "post_id", "username")->withPivot('vote_type');
     }
 
     public function postable()

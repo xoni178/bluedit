@@ -14,6 +14,7 @@ class PostResource extends JsonResource
      */
     public function toArray(Request $request): array
     {
+
         return [
             "post_id" => $this->id,
             "username" => $this->username,
@@ -26,6 +27,7 @@ class PostResource extends JsonResource
             "comment_count" => $this->comment_count,
             "created_at" => $this->created_at->format("d:m:y-h:m"),
             "community" => $this->community,
+            "vote" => $this->vote,
         ];
     }
 }

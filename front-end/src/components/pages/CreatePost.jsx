@@ -1,7 +1,7 @@
 import { useRef, useState } from "react";
 import App from "../../App";
 
-import { useNavigate } from "react-router";
+import { useNavigate, useSearchParams } from "react-router";
 
 import { useBlueditDataContext } from "../../api/DataContext";
 import { ResizeImage } from "../helpers/ResizeImage";
@@ -14,9 +14,14 @@ import UploadIcon from "../../assets/img/upload.png";
 export default function CreatePost() {
   const { SetException, SetSuccess } = useBlueditDataContext();
   const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
+  const community = searchParams.get("community");
+
   const imageRef = useRef();
 
-  const [selectedCommunity, SetSelectedCommunity] = useState(null);
+  const [selectedCommunity, SetSelectedCommunity] = useState(
+    community ? community : null
+  );
   const [title, SetTittle] = useState(null);
 
   const [postType, SetPostType] = useState("text_post");
@@ -123,6 +128,7 @@ export default function CreatePost() {
             setSelectedCommunity={(selectedCommunity) =>
               SetSelectedCommunity(selectedCommunity)
             }
+            selectedCommunity={selectedCommunity}
           />
         </div>
         <div className="w-[40%] flex gap-4 text-white">
