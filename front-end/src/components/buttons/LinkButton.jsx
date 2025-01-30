@@ -2,7 +2,9 @@
 import { ReactComponent as PopularSvg } from "../../assets/svg/popular.svg";
 import { ReactComponent as HouseSvg } from "../../assets/svg/house.svg";
 
-export default function LinkButton({ type, slot }) {
+export default function LinkButton({ type, slot, community }) {
+  const HOST = process.env.REACT_APP_API_HOST;
+
   return (
     <a
       href={type === "link" ? "/" : `/r/${slot}`}
@@ -14,7 +16,13 @@ export default function LinkButton({ type, slot }) {
             <HouseSvg />
           </div>
         ) : (
-          <div className="bg-[#192028] w-[32px] h-[32px] rounded-full"></div>
+          <div className="bg-[#192028] w-[32px] h-[32px] rounded-full">
+            <img
+              src={`${HOST}${community?.icon_url}`}
+              alt="icon"
+              className="w-full h-full object-cover rounded-full"
+            />
+          </div>
         )}
 
         <p className="text-white text-[15px] hover:underline">

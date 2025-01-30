@@ -48,10 +48,10 @@ export default function Searchbar({
   }, [communitiesData, userData]);
 
   return (
-    <div className="w-[250px] fixed flex flex-col h-fit z-5 top-[8px] mx-auto left-0 right-0">
+    <div className="w-[300px] fixed flex flex-col h-fit z-20 top-[8px] mx-auto left-0 right-0">
       <div
         className={
-          "flex flex-row items-center gap-3 bg-[#090e13] border-[#192028] border-[1px] rounded-t-3xl pr-10 pl-5 py-2 " +
+          "w-full flex flex-row items-center gap-3 bg-[#090e13] border-[#192028] border-[1px] rounded-t-3xl pr-10 pl-5 py-2 " +
           (isSearchDropdownActive ? "" : "rounded-b-3xl")
         }
       >
@@ -64,7 +64,7 @@ export default function Searchbar({
             type="text"
             name="search"
             placeholder="Search Bluedit"
-            className=" bg-transparent outline-none text-white"
+            className="w-full bg-transparent outline-none text-white"
           />
         </form>
       </div>

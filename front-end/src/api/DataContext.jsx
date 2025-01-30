@@ -23,7 +23,7 @@ export const DataContext = ({ children }) => {
   const checkIfNeedPagination = async (scrollPosition) => {
     const PageHeight = await getPageHeight();
 
-    let pageScrollEdge = (4 / 10) * PageHeight;
+    let pageScrollEdge = (1 / 10) * PageHeight;
     console.log(pageScrollEdge, PageHeight, scrollPosition);
     if (scrollPosition >= pageScrollEdge && !paginateNow) {
       SetPaginateNow(true);

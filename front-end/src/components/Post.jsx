@@ -17,6 +17,7 @@ export default function Post({ post, onClick, displayUsername }) {
         <div className="w-fit flex flex-row flex-start items-center">
           <LinkButton
             type={"community"}
+            community={post?.community}
             slot={post.type ? post.belongsTo : post.community_name}
           />
           {displayUsername ? (

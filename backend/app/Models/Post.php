@@ -10,6 +10,8 @@ class Post extends Model
     /** @use HasFactory<\Database\Factories\PostFactory> */
     use HasFactory;
 
+    protected $appends = ['content_resource'];
+
     protected $fillable = [
         "username",
         "community_name",

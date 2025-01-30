@@ -27,7 +27,10 @@ export default function PostPage() {
     <App>
       <section className="flex flex-col">
         <div
-          onClick={() => navigate(-1)}
+          onClick={() => {
+            const prevPath = location.state?.previousPath || "/";
+            navigate(prevPath);
+          }}
           className="w-[32px] h-[32px] flex flex-row justify-center items-center mt-[5px] rounded-full bg-[#192028] hover:cursor-pointer"
         >
           <span>

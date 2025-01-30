@@ -41,10 +41,17 @@ class HomeController extends Controller
         $randomValue = mt_rand(0, 2);
         $randomOffset = mt_rand(0, max(0, $total - 10));
 
+        $communitiesByName = $communities->keyBy('name');
+
         $posts = Post::whereIn("community_name", $communities->pluck("name"))
             ->offset($randomOffset)
             ->limit($randomValue)
-            ->inRandomOrder()->paginate(5);
+            ->inRandomOrder()
+            ->paginate(5)
+            ->through(function ($post) use ($communitiesByName) {
+                $post->community = $communitiesByName[$post->community_name];
+                return $post;
+            });;
 
         return PostResource::collection($posts);
     }

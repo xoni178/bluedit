@@ -11,6 +11,8 @@ import { useNavigate, useParams, useLocation } from "react-router-dom";
 
 import { SimpleButton } from "../buttons";
 
+import Loading from "../helpers/Loading";
+
 import { useBlueditDataContext } from "../../api/DataContext";
 
 export default function User() {
@@ -21,6 +23,8 @@ export default function User() {
   const [user, SetUser] = useState([]);
   const [links, SetLinks] = useState({});
 
+  const [showMessage, setShowMessage] = useState(false);
+
   const navigate = useNavigate();
   const location = useLocation();
   const { username } = useParams();
@@ -29,25 +33,27 @@ export default function User() {
 
   const getData = (nextLink = null) => {
     if (!nextLink) return;
-
+    setShowMessage(false);
     axios
       .get(
         nextLink === "/"
           ? `${HOST}/api/users/${username}/upvotes?page=1`
           : nextLink
       )
-      .then((requestData) => {
-        console.log(requestData);
-        if (requestData?.data?.data?.user) SetUser(requestData.data.data.user);
+      .then((response) => {
+        console.log(response);
+        SetUser(response?.data?.data?.user);
 
-        if (requestData?.data?.data?.upvoted?.entity) {
-          SetPostsAndComments((prevPosts) => [
-            ...prevPosts,
-            ...requestData.data.data.upvoted.entity,
-          ]);
+        SetPostsAndComments((prevPosts) => [
+          ...prevPosts,
+          ...response?.data?.data?.upvoted?.entity,
+        ]);
+
+        SetLinks(response?.data?.data?.links);
+
+        if (postsAndComments.length === 0) {
+          setShowMessage(true);
         }
-        if (requestData?.data?.data?.links)
-          SetLinks(requestData.data.data.links);
       })
       .catch((err) => console.error(err));
   };
@@ -122,25 +128,42 @@ export default function User() {
           </div>
         </div>
         <div className="w-[60%] flex flex-col gap-5 mt-14 items-center">
-          {postsAndComments
-            ? postsAndComments.map((entity, index) => {
-                if (entity.type === "post") {
-                  const postTitle = entity.content.replaceAll(" ", "_");
-                  return (
-                    <Post
-                      key={index}
-                      post={entity}
-                      displayUsername={false}
-                      onClick={() =>
-                        navigate(`/posts/${entity.id}/${postTitle}`)
-                      }
-                    />
-                  );
-                } else {
-                  return <Comment key={index} comment={entity} />;
-                }
-              })
-            : null}
+          {postsAndComments.length === 0 ? (
+            showMessage ? (
+              <div className="flex justify-center items-center h-[50vh]">
+                <h1 className="text-white text-3xl">
+                  No posts or comments to show
+                </h1>
+              </div>
+            ) : (
+              <Loading />
+            )
+          ) : (
+            postsAndComments.map((entity, index) => {
+              if (entity.type === "post") {
+                const postTitle = entity.title.replaceAll(" ", "_");
+                return (
+                  <Post
+                    key={index}
+                    post={entity}
+                    displayUsername={false}
+                    onClick={() => navigate(`/posts/${entity.id}/${postTitle}`)}
+                  />
+                );
+              } else {
+                return <Comment key={index} comment={entity} />;
+              }
+            })
+          )}
+          {postsAndComments.length > 0 && showMessage ? (
+            <div className="flex justify-center items-center h-[50vh]">
+              <h1 className="text-white text-3xl">
+                No more posts nor comments to show
+              </h1>
+            </div>
+          ) : (
+            <Loading />
+          )}
         </div>
       </section>
     </App>

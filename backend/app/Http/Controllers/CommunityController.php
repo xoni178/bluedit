@@ -4,8 +4,10 @@ namespace App\Http\Controllers;
 
 use App\Models\Community;
 use App\Http\Requests\StoreCommunityRequest;
-use App\Http\Requests\UpdateCommunityRequest;
-use Illuminate\Support\Facades\Validator;
+use App\Exceptions\InvalidToken;
+use App\Services\UserService;
+
+use App\Models\User;
 
 use Illuminate\Contracts\Database\Eloquent\Builder;
 
@@ -14,14 +16,6 @@ use App\Http\Resources\PostResource;
 
 class CommunityController extends Controller
 {
-
-    /**
-     * Display a listing of the resource.
-     */
-    public function index()
-    {
-        //
-    }
 
     /**
      * Show the form for creating a new resource.
@@ -71,20 +65,27 @@ class CommunityController extends Controller
         }
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(Community $community)
+    public function join()
     {
-        //
-    }
+        $request = request();
 
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(UpdateCommunityRequest $request, Community $community)
-    {
-        //
+        //validate authication
+        $token = $request->hasCookie("token") ? $request->cookie("token") : null;
+
+        if (!$token) throw new InvalidToken("Not Logged in", 401);
+
+        $tokenEntity = UserService::validateToken($token);
+
+        if ($tokenEntity === null) throw new InvalidToken("Invalid token");
+
+        //validate community name existence
+        $validated = $request->validate([
+            "community_name" => "required|string|exists:communities,name"
+        ]);
+
+        $user = User::FindOrFail($tokenEntity->tokenable_id);
+
+        $user->communities()->attach($validated["community_name"]);
     }
 
     /**

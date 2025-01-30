@@ -10,6 +10,8 @@ import { useNavigate, useParams, useLocation } from "react-router-dom";
 import { SimpleButton } from "../buttons";
 import axios from "axios";
 
+import Loading from "../helpers/Loading";
+
 import { useBlueditDataContext } from "../../api/DataContext";
 
 export default function UserComments() {
@@ -19,6 +21,8 @@ export default function UserComments() {
   const [user, SetUser] = useState([]);
   const [links, SetLinks] = useState({});
 
+  const [showMessage, setShowMessage] = useState(false);
+
   const navigate = useNavigate();
   const location = useLocation();
   const { username } = useParams();
@@ -27,24 +31,26 @@ export default function UserComments() {
 
   const getData = (nextLink = null) => {
     if (!nextLink) return;
-
+    setShowMessage(false);
     axios
       .get(
         nextLink === "/"
           ? `${HOST}/api/users/${username}/comments?page=1`
           : nextLink
       )
-      .then((requestData) => {
-        if (requestData?.data?.data?.user) SetUser(requestData.data.data.user);
+      .then((response) => {
+        SetUser(response?.data?.data?.user);
 
-        if (requestData?.data?.data?.comments) {
-          SetComments((prevPosts) => [
-            ...prevPosts,
-            ...requestData.data.data.comments,
-          ]);
+        SetComments((prevPosts) => [
+          ...prevPosts,
+          ...response?.data?.data?.comments,
+        ]);
+
+        SetLinks(response?.data?.data?.links);
+
+        if (comments.length === 0) {
+          setShowMessage(true);
         }
-        if (requestData?.data?.data?.links)
-          SetLinks(requestData.data.data.links);
       })
       .catch((err) => console.error(err));
   };
@@ -123,12 +129,26 @@ export default function UserComments() {
           </div>
         </div>
         <div className="w-[60%] h-fit flex flex-col gap-5 mt-14 items-center">
-          {console.log(comments)}
-          {comments
-            ? comments.map((comment, index) => {
-                return <Comment key={index} comment={comment} />;
-              })
-            : null}
+          {comments.length === 0 ? (
+            showMessage ? (
+              <div className="flex justify-center items-center h-[50vh]">
+                <h1 className="text-white text-3xl">No comments to show</h1>
+              </div>
+            ) : (
+              <Loading />
+            )
+          ) : (
+            comments.map((comment, index) => {
+              return <Comment key={index} comment={comment} />;
+            })
+          )}
+          {comments.length > 0 && showMessage ? (
+            <div className="flex justify-center items-center h-[50vh]">
+              <h1 className="text-white text-3xl">No more comments to show</h1>
+            </div>
+          ) : (
+            <Loading />
+          )}
         </div>
       </section>
     </App>

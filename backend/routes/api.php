@@ -37,4 +37,5 @@ Route::controller(\App\Http\Controllers\PostController::class)->group(function (
 
 Route::controller(\App\Http\Controllers\CommunityController::class)->group(function () {
     Route::get("/r/{community_name}", "show");
+    Route::post("community/join", "join");
 });

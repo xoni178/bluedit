@@ -25,6 +25,7 @@ class PostResource extends JsonResource
             "content_resource" => $this->content_resource,
             "comment_count" => $this->comment_count,
             "created_at" => $this->created_at->format("d:m:y-h:m"),
+            "community" => $this->community,
         ];
     }
 }

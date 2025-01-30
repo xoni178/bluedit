@@ -11,23 +11,37 @@ import { useNavigate, useParams, useLocation } from "react-router-dom";
 
 import { SimpleButton } from "../buttons";
 
+import { useBlueditDataContext } from "../../api/DataContext";
+
+import Loading from "../helpers/Loading";
+
 export default function User() {
   const navigate = useNavigate();
   const location = useLocation();
   const { username } = useParams();
 
+  const { SetException } = useBlueditDataContext();
+
+  const [showMessage, setShowMessage] = useState(false);
+
   const [user, SetUser] = useState({});
   const [posts, SetPosts] = useState([]);
 
   useEffect(() => {
+    setShowMessage(false);
+
     ApiRequest.get(`/api/users/${username}`)
       .then((user) => {
         console.log(user);
         SetUser(user?.data?.data?.user);
         SetPosts(user?.data?.data?.posts);
+
+        if (user?.data?.data?.posts.length === 0) {
+          setShowMessage(true);
+        }
       })
       .catch((err) => {
-        console.error(err);
+        SetException(err.message);
       });
   }, []);
 
@@ -89,22 +103,37 @@ export default function User() {
           </div>
         </div>
         <div className="flex flex-col gap-5 mt-14 items-center">
-          {posts
-            ? posts.map((post, index) => {
-                const postTitle = post.title.replaceAll(" ", "_");
+          {posts.length === 0 ? (
+            showMessage ? (
+              <div className="flex justify-center items-center h-[50vh]">
+                <h1 className="text-white text-3xl">No posts to show</h1>
+              </div>
+            ) : (
+              <Loading />
+            )
+          ) : (
+            posts.map((post, index) => {
+              const postTitle = post.title.replaceAll(" ", "_");
 
-                return (
-                  <Post
-                    key={index}
-                    post={post}
-                    displayUsername={false}
-                    onClick={() =>
-                      navigate(`/posts/${post.post_id}/${postTitle}`)
-                    }
-                  />
-                );
-              })
-            : null}
+              return (
+                <Post
+                  key={index}
+                  post={post}
+                  displayUsername={false}
+                  onClick={() =>
+                    navigate(`/posts/${post.post_id}/${postTitle}`)
+                  }
+                />
+              );
+            })
+          )}
+          {posts.length > 0 && showMessage ? (
+            <div className="flex justify-center items-center h-[50vh]">
+              <h1 className="text-white text-3xl">No more posts to show</h1>
+            </div>
+          ) : (
+            <Loading />
+          )}
         </div>
       </section>
     </App>

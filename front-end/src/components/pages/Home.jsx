@@ -56,7 +56,7 @@ export default function Home() {
 
   return (
     <App>
-      <div className="flex flex-col gap-5  mt-14">
+      <div className="flex flex-col gap-5 mt-14">
         {posts.length === 0 ? (
           showMessage ? (
             <div className="flex justify-center items-center h-[50vh]">
@@ -78,6 +78,13 @@ export default function Home() {
               />
             );
           })
+        )}
+        {posts.length > 0 && showMessage ? (
+          <div className="flex justify-center items-center h-[50vh]">
+            <h1 className="text-white text-3xl">No more posts to show</h1>
+          </div>
+        ) : (
+          <Loading />
         )}
       </div>
     </App>

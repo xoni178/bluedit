@@ -2,6 +2,8 @@
 
 namespace App\Services;
 
+use App\Http\Resources\PostResource;
+use App\Http\Resources\CommentResource;
 use Illuminate\Support\Facades\DB;
 use App\Models\User;
 

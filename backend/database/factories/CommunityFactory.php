@@ -3,12 +3,14 @@
 namespace Database\Factories;
 
 use Illuminate\Database\Eloquent\Factories\Factory;
+use Database\Factories\helpers\FactoriesHelper;
 
 /**
  * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\Community>
  */
 class CommunityFactory extends Factory
 {
+
     /**
      * Define the model's default state.
      *
@@ -19,8 +21,8 @@ class CommunityFactory extends Factory
         return [
             "name" => fake()->unique()->word(),
             "desc" => "blahblahblahblah",
-            "icon_url" => "",
-            "banner_url" => ""
+            "icon_url" => FactoriesHelper::fetchFakeContentUrl("images/communities/icons/fake"),
+            "banner_url" => FactoriesHelper::fetchFakeContentUrl("images/communities/banners/fake"),
         ];
     }
 }

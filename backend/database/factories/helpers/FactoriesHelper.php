@@ -2,7 +2,7 @@
 
 namespace Database\Factories\helpers;
 
-use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\Storage;
 
 class FactoriesHelper
 {
@@ -79,10 +79,23 @@ class FactoriesHelper
         ];
     }
 
-    // public static function getRandomVideo(): string{
+    /**
+     * Fetch a random image/video from the 'public' directory
+     * 
+     * @param string $path The path to the image from 'public' folder and after
+     * @return string
+     */
+    public static function fetchFakeContentUrl($path): string
+    {
+        $files = Storage::disk('public')->files($path);
+
+        if (count($files) === 0) return "";
 
 
+        $lastIndex = count($files) - 1;
 
-    //     return 
-    // }
+        $randomIndex = rand(0, $lastIndex);
+
+        return Storage::url($files[$randomIndex]);
+    }
 }
