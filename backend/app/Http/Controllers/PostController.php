@@ -14,11 +14,6 @@ use App\Http\Resources\PostCommentResource;
 class PostController extends Controller
 {
     /**
-     * Show the form for creating a new resource.
-     */
-    public function create() {}
-
-    /**
      * Store a newly created resource in storage.
      */
     public function store(StorePostRequest $request)
@@ -75,19 +70,20 @@ class PostController extends Controller
     public function show($post_id)
     {
         try {
+            $user = null;
+
             $post = Post::FindOrFail($post_id);
             if (request()->hasCookie("token")) {
                 $token = request()->cookie("token");
                 $user = UserService::authenticateUser($token);
-            } else {
-                error_log("no log in.");
             }
 
-            $post->vote = $user ? ($user->posts_voted()->where("post_id", $post->post_id)->first())?->vote_type : null;
 
+            $comments = $post->comments()->orderBy("created_at", "DESC")->get();
 
+            // return response()->json(["vote" => $post->vote]);
 
-            return new PostCommentResource(["post" => $post, "comments" => $post->comments]);
+            return new PostCommentResource(["post" => $post, "comments" => $comments]);
         } catch (\Illuminate\Database\Eloquent\ModelNotFoundException $err) {
 
             return response()->json(["error" => "Not found"],  404);

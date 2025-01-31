@@ -7,10 +7,44 @@ import ExceptionsHandeler from "./components/exceptions/ExceptionsHandeler";
 import SuccessHandeler from "./components/helpers/SuccessHandeler";
 import Searchbar from "./components/Searchbar";
 
+import ApiRequest from "./api/ApiRequest";
+
+import UseWindowDimensions from "./components/helpers/UseWindowDimensions";
+
 function App({ children }) {
-  const { exception, SetException, SetAuthUser, success, SetSuccess } =
-    useBlueditDataContext();
-  const [isSearchDropdownActive, SetIsSearchDropdownActive] = useState(false);
+  const { width } = UseWindowDimensions();
+
+  const {
+    exception,
+    SetException,
+    success,
+    SetSuccess,
+    imageToFullscreen,
+    SetImageToFullscreen,
+  } = useBlueditDataContext();
+
+  const [searchDropdownActive, SetSearchDropdownActive] = useState(false);
+  const [sideBarActive, SetSideBarActive] = useState(true);
+
+  const [communitiesDisplay, SetcommunitiesDisplay] = useState(true);
+  const [subscribetCommunities, SetsubscribetCommunities] = useState(null);
+
+  useEffect(() => {
+    ApiRequest.get("/api/user/communities")
+      .then((response) => {
+        console.log(response);
+        SetsubscribetCommunities(response?.data?.data);
+      })
+      .catch((error) => {
+        if (error.code === "ERR_NETWORK") {
+          SetException(
+            "Network Error: Check your internet connection or server."
+          );
+        }
+        if (error.status >= 500) SetException("Server error");
+        SetException(error.response?.data?.message);
+      });
+  }, []);
 
   const startCountDown = (type) => {
     setTimeout(() => {
@@ -27,36 +61,69 @@ function App({ children }) {
       return <ExceptionsHandeler message={"Error: " + exception} />;
   };
 
+  useEffect(() => {
+    if (width <= 1024) {
+      SetSideBarActive(false);
+    } else {
+      SetSideBarActive(true);
+    }
+  }, [width]);
+
   return (
-    <div className="h-fit">
+    <div className="h-fit bg-[#090e13]">
+      {console.log(imageToFullscreen)}
+      {imageToFullscreen ? (
+        <div className="absolute bg-black bg-opacity-70 w-[100vw] h-[100vh] z-30 flex justify-center items-center">
+          <div className="w-3 h-3 rounded-full p-5 bg-red-500 flex justify-center items-center absolute top-11 right-3">
+            <button
+              className="text-white"
+              onClick={() => SetImageToFullscreen(null)}
+            >
+              X
+            </button>
+          </div>
+          <img
+            src={imageToFullscreen}
+            alt=""
+            className="w-full h-full object-contain rounded-lg"
+          />
+        </div>
+      ) : null}
+
       {exception ? handlePopup("error") : null}
       {success ? handlePopup("success") : null}
       <header>
-        <Navbar />
+        <Navbar SetSideBarActive={(value) => SetSideBarActive(value)} />
 
-        {isSearchDropdownActive ? (
+        {searchDropdownActive ? (
           <div
             className={
               "w-full h-full fixed top-0 left-0 z-7 " +
-              (isSearchDropdownActive ? "block" : "hidden")
+              (searchDropdownActive ? "block" : "hidden")
             }
-            onClick={() => SetIsSearchDropdownActive(false)}
+            onClick={() => SetSearchDropdownActive(false)}
           ></div>
         ) : null}
 
         <Searchbar
-          SetIsSearchDropdownActive={(isActive) =>
-            SetIsSearchDropdownActive(isActive)
+          SetSearchDropdownActive={(isActive) =>
+            SetSearchDropdownActive(isActive)
           }
-          isSearchDropdownActive={isSearchDropdownActive}
+          searchDropdownActive={searchDropdownActive}
         />
       </header>
 
       <main className="h-fit flex flex-row">
-        <div className="ml-[20%] mt-[70px] w-full flex items-center flex-col">
+        <div className="ml-[20%] mt-[50px] w-full flex items-center flex-col max-lg:ml-0">
           {children}
         </div>
-        <Sidebar />
+
+        <Sidebar
+          SetcommunitiesDisplay={(value) => SetcommunitiesDisplay(value)}
+          communitiesDisplay={communitiesDisplay}
+          subscribetCommunities={subscribetCommunities}
+          sideBarActive={sideBarActive}
+        />
       </main>
     </div>
   );

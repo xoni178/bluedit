@@ -10,15 +10,19 @@ import Loading from "../helpers/Loading";
 import axios from "axios";
 import ApiRequest from "../../api/ApiRequest";
 
+import UseWindowDimensions from "../helpers/UseWindowDimensions";
+
 export default function Community() {
+  const { width } = UseWindowDimensions();
+
   const { community } = useParams();
   const { paginateNow, SetPaginateNow } = useBlueditDataContext();
 
   const navigate = useNavigate();
   const [isFirstRender, SetIsFirstRender] = useState(true);
   const [posts, SetPosts] = useState([]);
-  const [links, SetLinks] = useState({});
-  const [communityData, SetCommunityData] = useState("");
+  const [links, SetLinks] = useState(null);
+  const [communityData, SetCommunityData] = useState(null);
 
   const [isSubscribed, SetIsSubscribed] = useState(false);
 
@@ -27,7 +31,10 @@ export default function Community() {
   const HOST = process.env.REACT_APP_API_HOST;
 
   const getData = (nextLink = null) => {
-    if (!nextLink) return;
+    if (!nextLink) {
+      setShowMessage(true);
+      return;
+    }
 
     setShowMessage(false);
 
@@ -45,9 +52,6 @@ export default function Community() {
         SetLinks(response?.data?.links);
         SetCommunityData(response?.data?.community);
 
-        if (response?.data?.posts.length === 0) {
-          setShowMessage(true);
-        }
         if (response?.data?.community?.isSubscribed) {
           SetIsSubscribed(true);
         }
@@ -60,7 +64,7 @@ export default function Community() {
       getData("/");
       SetIsFirstRender(false);
     }
-    console.log(paginateNow);
+
     if (paginateNow) {
       getData(links.next);
       SetPaginateNow(false);
@@ -106,7 +110,7 @@ export default function Community() {
           </div>
           <div className="flex flex-row justify-between pt-2">
             <div className="ml-[10%] ">
-              <div className=" w-[88px] h-[88px] bg-gray-400 absolute bottom-3 left-6 rounded-full">
+              <div className=" w-[88px] h-[88px] max-sm:w-[52px] max-sm:h-[52px] max-sm:absolute max-sm:bottom-12 bg-gray-400 absolute bottom-3 left-6 rounded-full">
                 {communityData?.icon_url ? (
                   <img
                     src={`${HOST}${communityData?.icon_url}`}
@@ -116,7 +120,15 @@ export default function Community() {
                 ) : null}
               </div>
               <div>
-                <h1 className="text-3xl font-bold text-white">
+                <h1
+                  className={`text-3xl font-bold text-white max-sm:ml-0 ${
+                    width >= 1310
+                      ? width <= 1720 && width > 640
+                        ? "ml-7"
+                        : ""
+                      : "ml-16"
+                  }`}
+                >
                   {communityData?.name}
                 </h1>
               </div>
@@ -152,15 +164,13 @@ export default function Community() {
             )
           ) : (
             posts.map((post, index) => {
-              const postTitle = post.title.replaceAll(" ", "_");
-
               return (
                 <Post
                   key={index}
                   post={post}
                   displayUsername={false}
                   onClick={() =>
-                    navigate(`/posts/${post.post_id}/${postTitle}`, {
+                    navigate(`/posts/${post.post_id}`, {
                       replace: true,
                     })
                   }
@@ -169,13 +179,15 @@ export default function Community() {
             })
           )}
 
-          {posts && posts.length > 0 && showMessage ? (
-            <div className="flex justify-center items-center h-[50vh]">
-              <h1 className="text-white text-3xl">No more posts to show</h1>
-            </div>
-          ) : (
-            <Loading />
-          )}
+          {posts.length !== 0 ? (
+            showMessage ? (
+              <div className="flex justify-center items-center h-[100px]">
+                <h1 className="text-white text-xl">No more posts to show</h1>
+              </div>
+            ) : (
+              <Loading />
+            )
+          ) : null}
         </div>
       </section>
     </App>

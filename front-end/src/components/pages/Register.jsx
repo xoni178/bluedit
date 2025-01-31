@@ -7,7 +7,11 @@ import { useBlueditDataContext } from "../../api/DataContext";
 
 import { useNavigate } from "react-router-dom";
 
+import UseWindowDimensions from "../helpers/UseWindowDimensions";
+
 export default function User() {
+  const { width } = UseWindowDimensions();
+
   const { SetAuthUser } = useBlueditDataContext();
   const navigate = useNavigate();
 
@@ -43,13 +47,18 @@ export default function User() {
 
   return (
     <App>
-      <section className="w-[50%] h-fit flex flex-col gap-5 mt-14">
-        <form action="/register" method="POST" onSubmit={(e) => onSubmit(e)}>
+      <section className="w-[400px] h-fit max-sm:w-[350px] flex flex-row gap-5 mt-14">
+        <form
+          className="w-full"
+          action="/register"
+          method="POST"
+          onSubmit={(e) => onSubmit(e)}
+        >
           <div className="w-full flex items-center">
             <h1 className="text-white text-3xl font-bold">Register</h1>
           </div>
 
-          <div className="w-full flex flex-row gap-5 mt-3">
+          <div className="w-full flex flex-col gap-5 mt-3">
             <div className="w-full  flex flex-col justify-start">
               <span className="text-sm text-white">Username</span>
               <input
@@ -92,8 +101,8 @@ export default function User() {
             </div>
           </div>
 
-          <div className="w-full flex flex-row gap-5 mt-3">
-            <div className="w-[50%] flex flex-col justify-start">
+          <div className="w-full flex flex-col gap-5 mt-3">
+            <div className="w-full flex flex-col justify-start">
               <span className="text-sm text-white">Password</span>
               <input
                 type="password"
@@ -113,7 +122,7 @@ export default function User() {
                 ) : null
               ) : null}
             </div>
-            <div className="w-[50%] flex flex-col justify-start">
+            <div className="w-full flex flex-col justify-start">
               <span className="text-sm text-white">Confirm Password</span>
               <input
                 type="password"

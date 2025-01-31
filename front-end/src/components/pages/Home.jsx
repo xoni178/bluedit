@@ -41,7 +41,7 @@ export default function Home() {
         SetPosts((prevPosts) => [...prevPosts, ...response?.data?.data]);
         SetLinks(response?.data?.links);
 
-        if (response?.data?.posts?.length === 0) {
+        if (response?.data?.data?.length === 0) {
           setShowMessage(true);
         }
       })
@@ -85,13 +85,16 @@ export default function Home() {
             );
           })
         )}
-        {posts.length > 0 && showMessage ? (
-          <div className="flex justify-center items-center h-[50vh]">
-            <h1 className="text-white text-3xl">No more posts to show</h1>
-          </div>
-        ) : (
-          <Loading />
-        )}
+
+        {posts.length !== 0 ? (
+          showMessage ? (
+            <div className="flex justify-center items-center h-[100px]">
+              <h1 className="text-white text-xl">No more posts to show</h1>
+            </div>
+          ) : (
+            <Loading />
+          )
+        ) : null}
       </div>
     </App>
   );

@@ -14,8 +14,11 @@ import { SimpleButton } from "../buttons";
 import { useBlueditDataContext } from "../../api/DataContext";
 
 import Loading from "../helpers/Loading";
+import UseWindowDimensions from "../helpers/UseWindowDimensions";
 
 export default function User() {
+  const { width } = UseWindowDimensions();
+
   const navigate = useNavigate();
   const location = useLocation();
   const { username } = useParams();
@@ -49,28 +52,53 @@ export default function User() {
     <App>
       <section className="w-full">
         <div className="w-full flex items-center flex-col">
-          <div className="w-[60%] h-[200px] flex flex-row justify-center items-center gap-5">
-            <div className="flex flex-row justify-center items-center gap-5">
-              <div className="w-[64px] h-[64px]">
-                <UserSvg />
+          {width >= 640 ? (
+            <div className="w-[700px] h-[200px] flex flex-row justify-center items-center gap-5">
+              <div className="flex flex-row justify-center items-center gap-5">
+                <div className="w-[64px] h-[64px]">
+                  <UserSvg />
+                </div>
+                <h1 className="text-white text-3xl">{user.username}</h1>
               </div>
-              <h1 className="text-white text-3xl">{user.username}</h1>
+              <div className="w-[350px] h-[100px] bg-black flex flex-row items-center p-5 rounded-lg">
+                <div className="w-full text-white flex flex-col items-center">
+                  <p className="text-lg">{user.posts_karma}</p>
+                  <p className="text-sm text-gray-400">Post karma</p>
+                </div>
+                <div className="w-full text-white flex flex-col items-center">
+                  <p className="text-lg">{user.comments_karma}</p>
+                  <p className="text-sm text-gray-400">Comment karma</p>
+                </div>
+                <div className="w-full text-white flex flex-col items-center">
+                  <p className="text-lg ">{user.created_at}</p>
+                  <p className="text-sm text-gray-400">Cake day</p>
+                </div>
+              </div>
             </div>
-            <div className="w-1/2 h-1/2 bg-black flex flex-row items-center p-5 rounded-lg">
-              <div className="w-full text-white flex flex-col items-center">
-                <p className="text-lg">{user.posts_karma}</p>
-                <p className="text-sm text-gray-400">Post karma</p>
+          ) : (
+            <div className="w-[700px] h-[400px] flex flex-col justify-center items-center gap-5">
+              <div className="flex flex-col justify-center items-center gap-5">
+                <div className="w-[64px] h-[64px]">
+                  <UserSvg />
+                </div>
+                <h1 className="text-white text-3xl">{user.username}</h1>
               </div>
-              <div className="w-full text-white flex flex-col items-center">
-                <p className="text-lg">{user.comments_karma}</p>
-                <p className="text-sm text-gray-400">Comment karma</p>
-              </div>
-              <div className="w-full text-white flex flex-col items-center">
-                <p className="text-lg ">{user.created_at}</p>
-                <p className="text-sm text-gray-400">Cake day</p>
+              <div className="w-[350px] h-[100px] bg-black flex flex-row items-center p-5 rounded-lg">
+                <div className="w-full text-white flex flex-col items-center">
+                  <p className="text-lg">{user.posts_karma}</p>
+                  <p className="text-sm text-gray-400">Post karma</p>
+                </div>
+                <div className="w-full text-white flex flex-col items-center text-center">
+                  <p className="text-lg">{user.comments_karma}</p>
+                  <p className="text-sm text-gray-400">Comment karma</p>
+                </div>
+                <div className="w-full text-white flex flex-col items-center">
+                  <p className="text-lg ">{user.created_at}</p>
+                  <p className="text-sm text-gray-400">Cake day</p>
+                </div>
               </div>
             </div>
-          </div>
+          )}
 
           <div>
             <ul className="text-white flex flex-row gap-10">
@@ -106,7 +134,9 @@ export default function User() {
           {posts.length === 0 ? (
             showMessage ? (
               <div className="flex justify-center items-center h-[50vh]">
-                <h1 className="text-white text-3xl">No posts to show</h1>
+                <h1 className="text-white text-3xl max-sm:text-lg">
+                  No posts to show
+                </h1>
               </div>
             ) : (
               <Loading />
@@ -127,13 +157,15 @@ export default function User() {
               );
             })
           )}
-          {posts.length > 0 && showMessage ? (
-            <div className="flex justify-center items-center h-[50vh]">
-              <h1 className="text-white text-3xl">No more posts to show</h1>
-            </div>
-          ) : (
-            <Loading />
-          )}
+          {posts.length !== 0 ? (
+            showMessage ? (
+              <div className="flex justify-center items-center h-[100px]">
+                <h1 className="text-white text-xl">No more posts to show</h1>
+              </div>
+            ) : (
+              <Loading />
+            )
+          ) : null}
         </div>
       </section>
     </App>

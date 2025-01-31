@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Community;
 use App\Http\Requests\StoreCommunityRequest;
 use App\Http\Requests\ShowCommunityRequest;
+use App\Http\Resources\CommunityResource;
 use Illuminate\Http\Request;
 use App\Services\UserService;
 
@@ -21,9 +22,18 @@ class CommunityController extends Controller
     /**
      * Show the form for creating a new resource.
      */
-    public function create()
+    public function subscriptions(Request $request)
     {
-        //
+        //validate authentication
+        $token = $request->hasCookie("token") ? $request->cookie("token") : null;
+
+        if ($token) {
+            $user = UserService::authenticateUser($token);
+
+            $subscribedCommunities = $user->communities()->paginate(20);
+
+            return CommunityResource::collection($subscribedCommunities);
+        }
     }
 
     /**
@@ -49,7 +59,7 @@ class CommunityController extends Controller
                 "users AS downvote_count" => function (Builder $query) {
                     $query->where("vote_type", "DOWNVOTE");
                 }
-            ])->paginate(5);
+            ])->orderBy("created_at", "DESC")->paginate(5);
 
             if ($request->hasCookie("token")) {
 
@@ -75,10 +85,8 @@ class CommunityController extends Controller
         }
     }
 
-    public function join()
+    public function join(Request $request)
     {
-        $request = request();
-
         //validate authentication
         $token = $request->hasCookie("token") ? $request->cookie("token") : null;
 
@@ -93,10 +101,8 @@ class CommunityController extends Controller
 
         if (!$isSubscriptied) $user->communities()->attach($validated["community_name"]);
     }
-    public function leave()
+    public function leave(Request $request)
     {
-        $request = request();
-
         //validate authentication
         $token = $request->hasCookie("token") ? $request->cookie("token") : null;
 

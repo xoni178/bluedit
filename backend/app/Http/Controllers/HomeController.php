@@ -16,6 +16,7 @@ class HomeController extends Controller
 {
     public function index()
     {
+        $user = null;
         $total = Community::count();
 
         $randomOffset = mt_rand(0, max(0, $total - 10));
@@ -25,8 +26,6 @@ class HomeController extends Controller
         if (request()->hasCookie("token")) {
             $token = request()->cookie("token");
             $user = UserService::authenticateUser($token);
-        } else {
-            error_log("no log in.");
         }
 
         $communities = $randomCommunities->get();
@@ -40,12 +39,13 @@ class HomeController extends Controller
             ->offset($randomOffset)
             ->limit($randomValue)
             ->inRandomOrder()
+            ->orderBy("created_at", "DESC")
             ->paginate(5)
             ->through(function ($post) use ($communitiesByName, $user) {
                 $post->community = $communitiesByName[$post->community_name];
                 $post->vote = $user ? ($user->posts_voted()->where("post_id", $post->post_id)->first())?->vote_type : null;
                 return $post;
-            });;
+            });
 
         return PostResource::collection($posts);
     }

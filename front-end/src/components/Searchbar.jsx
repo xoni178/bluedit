@@ -7,8 +7,8 @@ import { throttle } from "lodash";
 import ApiRequest from "../api/ApiRequest";
 
 export default function Searchbar({
-  SetIsSearchDropdownActive,
-  isSearchDropdownActive,
+  SetSearchDropdownActive,
+  searchDropdownActive,
 }) {
   const [communitiesData, SetCommunitiesData] = useState(null);
   const [userData, SetUserData] = useState(null);
@@ -41,18 +41,18 @@ export default function Searchbar({
       (communitiesData && communitiesData.length !== 0) ||
       (userData && userData.length !== 0)
     ) {
-      SetIsSearchDropdownActive(true);
+      SetSearchDropdownActive(true);
     } else {
-      SetIsSearchDropdownActive(false);
+      SetSearchDropdownActive(false);
     }
   }, [communitiesData, userData]);
 
   return (
-    <div className="w-[300px] fixed flex flex-col h-fit z-20 top-[8px] mx-auto left-0 right-0">
+    <div className="w-[300px]  max-sm:w-[120px] fixed flex flex-col h-fit z-20 top-[8px] mx-auto left-0 right-0">
       <div
         className={
           "w-full flex flex-row items-center gap-3 bg-[#090e13] border-[#192028] border-[1px] rounded-t-3xl pr-10 pl-5 py-2 " +
-          (isSearchDropdownActive ? "" : "rounded-b-3xl")
+          (searchDropdownActive ? "" : "rounded-b-3xl")
         }
       >
         <div className=" ">
@@ -72,7 +72,7 @@ export default function Searchbar({
       <div
         className={
           "w-full absolute top-[40px] h-fit px-5 pb-5 pt-2 bg-[#090e13] border-[#192028] border-[1px] rounded-b-3xl " +
-          (isSearchDropdownActive ? "block" : "hidden")
+          (searchDropdownActive ? "block" : "hidden")
         }
       >
         {communitiesData ? (

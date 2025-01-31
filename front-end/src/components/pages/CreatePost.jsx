@@ -119,11 +119,13 @@ export default function CreatePost() {
 
   return (
     <App>
-      <section className="w-[50%] h-fit flex flex-col gap-3">
+      <section className="w-[600px] h-fit max-sm:w-[400px] flex flex-col gap-3 mt-5">
         <div className="flex">
-          <h1 className="text-white text-3xl font-bold">Create Post</h1>
+          <h1 className="text-white text-3xl font-bold max-sm:text-lg">
+            Create Post
+          </h1>
         </div>
-        <div className="w-[50%]">
+        <div className="w-[60%]">
           <CommunitySelector
             setSelectedCommunity={(selectedCommunity) =>
               SetSelectedCommunity(selectedCommunity)
@@ -131,7 +133,7 @@ export default function CreatePost() {
             selectedCommunity={selectedCommunity}
           />
         </div>
-        <div className="w-[40%] flex gap-4 text-white">
+        <div className="w-[300px] flex gap-4 text-white">
           <ListButton
             slot={"Text"}
             onClick={() => SetPostType("text_post")}

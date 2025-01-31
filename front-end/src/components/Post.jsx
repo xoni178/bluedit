@@ -4,7 +4,13 @@ import { ReactComponent as CommentSvg } from "../assets/svg/comment.svg";
 
 import ApiRequest from "../api/ApiRequest";
 
+import { useBlueditDataContext } from "../api/DataContext";
+
+import UseWindowDimensions from "./helpers/UseWindowDimensions";
 export default function Post({ post, onClick, displayUsername }) {
+  const { width } = UseWindowDimensions();
+  const { SetImageToFullscreen } = useBlueditDataContext();
+
   const [upvoted, SetUpvoted] = useState(false);
   const [downvoted, SetDownvoted] = useState(false);
 
@@ -56,7 +62,7 @@ export default function Post({ post, onClick, displayUsername }) {
     <div
       onClick={!displayUsername ? onClick : null}
       className={
-        "w-[750px] h-fit flex flex-col px-3 border-b-[1px] border-[#192028] shadow-md" +
+        "w-[750px] h-fit max-md:w-[600px] max-sm:w-[390px] flex flex-col px-3 border-b-[1px] border-[#192028] shadow-md" +
         (!displayUsername
           ? " hover:cursor-pointer hover:bg-[#192028] hover:rounded-xl"
           : null)
@@ -67,45 +73,51 @@ export default function Post({ post, onClick, displayUsername }) {
           <LinkButton
             type={"community"}
             community={post?.community}
-            slot={post.type ? post.belongsTo : post.community_name}
+            slot={post?.type ? post?.belongsTo : post?.community_name}
           />
           {displayUsername ? (
             <a
-              href={`/users/${post.username}`}
+              href={`/users/${post?.username}`}
               className="text-white text-[10px] hover:underline"
             >
-              u/{post.username}
+              u/{post?.username}
             </a>
           ) : null}
         </div>
         <div className="ml-5">
-          <p className="text-white text-[10px]">{post.created_at}</p>
+          <p className="text-white text-[10px]">{post?.created_at}</p>
         </div>
       </div>
       <div className="w-full px-2">
-        <h1 className="text-2xl text-white">{post.title}</h1>
+        <h1 className="text-2xl text-white">{post?.title}</h1>
       </div>
-      {post.postable_type === "text_post" ? (
-        <div className="w-full h-[100px] my-2 rounded-lg">
+      {post?.postable_type === "text_post" ? (
+        <div className="w-full h-[100px] my-2 rounded-lg max-md:h-[80px] max-sm:h-[40px]">
           <p className="text-white">
-            {post.content_resource.slice(0, 300) + "..."}
+            {post?.content_resource.slice(0, width > 640 ? 300 : 80) + "..."}
           </p>
         </div>
       ) : null}
-      {post.postable_type === "image_post" ? (
-        <div className="w-full h-[500px] my-2 rounded-lg">
+      {post?.postable_type === "image_post" ? (
+        <div className="w-full h-[500px] my-2 rounded-lg max-md:h-[400px] max-sm:[300px]">
           <img
-            src={HOST + post.content_resource}
-            alt={post.title}
-            className="w-full h-full object-contain rounded-lg"
+            src={HOST + post?.content_resource}
+            alt={post?.title}
+            className="w-full h-full object-contain rounded-lg cursor-pointer"
+            onClick={() => SetImageToFullscreen(HOST + post?.content_resource)}
           />
         </div>
       ) : null}
       {post.postable_type === "video_post" ? (
-        <div className="w-full h-[450px] my-2 rounded-lg flex ">
-          <video className="w-full h-full" controls>
+        <div className="w-full h-[450px] my-2 rounded-lg max-md:h-[300px] max-sm:[200px]">
+          <video
+            controls
+            playsInline
+            className="w-full h-full"
+            onClick={(e) => e.stopPropagation()}
+          >
             <source
-              src={HOST + post.content_resource}
+              src={HOST + post?.content_resource}
               type="video/mp4"
             ></source>
           </video>
@@ -113,7 +125,7 @@ export default function Post({ post, onClick, displayUsername }) {
       ) : null}
 
       <div
-        className="w-full h-[30px] flex items-center gap-5 mb-1"
+        className="w-full h-[30px] flex items-center gap-5 mb-1 mt-3"
         onClick={(e) => e.stopPropagation()}
       >
         <div className="flex items-center gap-3 px-2 py-1 bg-[#192028] rounded-full shadow-lg">
@@ -126,8 +138,8 @@ export default function Post({ post, onClick, displayUsername }) {
 
           <p className="text-white w-2 ">
             {post
-              ? post.upvote_count -
-                post.downvote_count +
+              ? post?.upvote_count -
+                post?.downvote_count +
                 ((upvoted ? 1 : 0) || (downvoted ? -1 : 0))
               : null}
           </p>
@@ -140,7 +152,7 @@ export default function Post({ post, onClick, displayUsername }) {
         </div>
         <div className="flex items-center gap-2 px-3 py-1 bg-[#192028] rounded-full shadow-2xl shadow-black">
           <CommentSvg />
-          <p className="text-white">{post.comment_count}</p>
+          <p className="text-white">{post?.comment_count}</p>
         </div>
       </div>
     </div>

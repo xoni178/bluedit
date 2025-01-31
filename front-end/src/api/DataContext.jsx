@@ -11,6 +11,8 @@ export const DataContext = ({ children }) => {
   const [exception, SetException] = useState(null);
   const [success, SetSuccess] = useState(null);
 
+  const [imageToFullscreen, SetImageToFullscreen] = useState(null);
+
   const getPageHeight = async () => {
     return window.document.body.clientHeight;
   };
@@ -52,6 +54,8 @@ export const DataContext = ({ children }) => {
         SetException,
         success,
         SetSuccess,
+        imageToFullscreen,
+        SetImageToFullscreen,
       }}
     >
       {children}
