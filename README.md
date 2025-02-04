@@ -1,24 +1,61 @@
-<p align="center">Bluedit</p>
+# Bluedit (Laravel & ReactJS Web App)
 
-This is a simple Reddit copy made with Laravel.
-It’s for my portfolio and has basic features for users to explore, post, and join communities.
+Bluedit is a Reddit-like web application built with Laravel and ReactJS. It allows users to browse and interact with posts, create accounts, and engage in community discussions.
 
-How to run (paste to terminal):
+---
 
-git clone https://github.com/xoni178/bluedit
+## Features
+- **View Posts**: Browse images, videos, and text-based posts.
+- **User Authentication**: Personal token-based authentication for secure login and account management.
+- **Create Posts**: Users can create and share content.
+- **Community Creation**: Ability to create and manage communities.
+- **Comments & Discussions**: Engage in discussions by commenting on posts.
+- **Voting System**: Upvote and downvote posts and comments to influence visibility.
 
-composer install
+## Screenshots & GIFs
+> *(Replace with actual image & GIF paths)*
 
-npm install
+| Home Page | Post View | Community Page |
+|-----------|----------|---------------|
+| ![Home](path/to/home-image.gif) | ![Post](path/to/post-image.gif) | ![Community](path/to/community-image.gif) |
 
-copy .env.example .env
+## Technologies Used
+- **Backend:** Laravel 11
+- **Frontend:** ReactJS
+- **Authentication:** Personal Token-based Authentication
+- **Database:** MySQL
+- **Storage:** AWS S3 / Local Storage for media uploads
 
-php artisan key:generate
+## Installation & Setup
+1. **Clone the repository:**
+   ```sh
+   git clone https://github.com/yourusername/bluedit.git
+   ```
+2. **Backend Setup:**
+   ```sh
+   cd backend
+   composer install
+   cp .env.example .env
+   php artisan key:generate
+   php artisan migrate --seed
+   php artisan serve
+   ```
+3. **Frontend Setup:**
+   ```sh
+   cd frontend
+   npm install
+   npm start
+   ```
 
-php artisan migrate
+## Roadmap
+- [ ] Add real-time notifications
+- [ ] Implement private messaging system
+- [ ] Enhance moderation tools for communities
 
-php artisan db:seed
+## Contributing
+Contributions are welcome! Feel free to **fork** the repo and submit pull requests.
 
-php artisan serve //start laravel server on http://127.0.0.1:8000
+## License
+This project is licensed under the **MIT License**.
 
-(paste to different terminal): npm run dev //start vite server
+---
