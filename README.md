@@ -22,7 +22,7 @@ Bluedit is a Reddit-like web application built with Laravel and ReactJS. It allo
 - **Frontend:** ReactJS
 - **Authentication:** Personal Token-based Authentication
 - **Database:** MySQL
-- **Storage:** AWS S3 / Local Storage for media uploads
+- **Storage:** Local Storage for media uploads
 
 ## Installation & Setup
 1. **Clone the repository:**
