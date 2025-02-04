@@ -14,7 +14,7 @@ use App\Services\UserService;
 use Illuminate\Contracts\Database\Eloquent\Builder;
 
 use App\Http\Resources\PostResource;
-
+use Illuminate\Support\Facades\Storage;
 
 class CommunityController extends Controller
 {
@@ -41,7 +41,31 @@ class CommunityController extends Controller
      */
     public function store(StoreCommunityRequest $request)
     {
-        //
+        //validate data
+        $validated = $request->validated();
+
+        $iconPath = null;
+        $bannerPath = null;
+
+        //store images
+        if (array_key_exists("icon", $validated)) {
+            $iconPath = $request->file("icon")->store("images/communities/icons", "public");
+        }
+
+        if (array_key_exists("banner", $validated)) {
+            $bannerPath = $request->file("banner")->store("images/communities/banners", "public");
+        }
+
+        //Create community
+        $community = Community::create([
+            "name" => $validated["name"],
+            "desc" => $validated["desc"],
+            "icon_url" =>  $iconPath ? "/storage/" . $iconPath : null,
+            "banner_url" => $bannerPath ? "/storage/" . $bannerPath : null
+        ]);
+
+
+        return response()->json(["community_name" => $community->name], 201);
     }
 
     /**
@@ -85,7 +109,7 @@ class CommunityController extends Controller
         }
     }
 
-    public function join(Request $request)
+    public function join(Request $request, $community_name)
     {
         //validate authentication
         $token = $request->hasCookie("token") ? $request->cookie("token") : null;
@@ -93,29 +117,33 @@ class CommunityController extends Controller
         $user = UserService::authenticateUser($token);
 
         //validate community existence
-        $validated = $request->validate([
-            "community_name" => "required|string|exists:communities,name"
-        ]);
+        $community = Community::where("name", $community_name)->exists();
 
-        $isSubscriptied = $user->communities()->where("name", $validated["community_name"])->exists();
+        if ($community) {
+            $isSubscriptied = $user->communities()->where("name", $community_name)->exists();
 
-        if (!$isSubscriptied) $user->communities()->attach($validated["community_name"]);
+            if (!$isSubscriptied) $user->communities()->attach($community_name);
+        } else {
+            return response(["message" => "Community not found!"], 404);
+        }
     }
-    public function leave(Request $request)
+    public function leave(Request $request, $community_name)
     {
         //validate authentication
         $token = $request->hasCookie("token") ? $request->cookie("token") : null;
 
         $user = UserService::authenticateUser($token);
 
-        //validate community existence
-        $validated = $request->validate([
-            "community_name" => "required|string|exists:communities,name"
-        ]);
+        ///validate community existence
+        $community = Community::where("name", $community_name)->exists();
 
-        $isSubscriptied = $user->communities()->where("name", $validated["community_name"])->exists();
+        if ($community) {
+            $isSubscriptied = $user->communities()->where("name", $community_name)->exists();
 
-        if ($isSubscriptied) $user->communities()->detach($validated["community_name"]);
+            if ($isSubscriptied) $user->communities()->detach($community_name);
+        } else {
+            return response(["message" => "Community not found!"], 404);
+        }
     }
     /**
      * Remove the specified resource from storage.

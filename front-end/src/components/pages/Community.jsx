@@ -52,6 +52,9 @@ export default function Community() {
         SetLinks(response?.data?.links);
         SetCommunityData(response?.data?.community);
 
+        if (response?.data?.posts.length === 0) {
+          setShowMessage(true);
+        }
         if (response?.data?.community?.isSubscribed) {
           SetIsSubscribed(true);
         }
@@ -72,27 +75,27 @@ export default function Community() {
   }, [paginateNow]);
 
   const handleSubscription = () => {
-    ApiRequest.post(`api/community/join`, {
-      community_name: communityData.name,
-    })
-      .then((response) => {
-        if (response.status === 200) {
-          SetIsSubscribed(true);
-        }
-      })
-      .catch((err) => console.error(err));
+    ApiRequest.get("/sanctum/csrf-cookie").then(() => {
+      ApiRequest.post(`api/user/community/${community}/join`)
+        .then((response) => {
+          if (response.status === 200) {
+            SetIsSubscribed(true);
+          }
+        })
+        .catch((err) => console.error(err));
+    });
   };
 
   const handleUnSubscription = () => {
-    ApiRequest.post(`api/community/leave`, {
-      community_name: communityData.name,
-    })
-      .then((response) => {
-        if (response.status === 200) {
-          SetIsSubscribed(false);
-        }
-      })
-      .catch((err) => console.error(err));
+    ApiRequest.get("/sanctum/csrf-cookie").then(() => {
+      ApiRequest.post(`api/user/community/${community}/leave`)
+        .then((response) => {
+          if (response.status === 200) {
+            SetIsSubscribed(false);
+          }
+        })
+        .catch((err) => console.error(err));
+    });
   };
 
   return (

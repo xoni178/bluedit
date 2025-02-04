@@ -19,13 +19,11 @@ export default function Login() {
     e.preventDefault();
 
     ApiRequest.get("/sanctum/csrf-cookie").then(() => {
-      console.log(email, password);
       ApiRequest.post("api/login", {
         email,
         password,
       })
         .then((userData) => {
-          console.log(userData);
           SetAuthUser(userData.data);
           localStorage.setItem("authUser", JSON.stringify(userData.data));
           navigate("/");
@@ -53,7 +51,7 @@ export default function Login() {
                 placeholder="example@example.com"
                 className="w-full h-[60px] px-5 py-2 bg-transparent border-[1px] border-[#192028] rounded-full text-white outline-none"
                 onChange={(e) => SetEmail(e.target.value)}
-                // required
+                required
               />
 
               <p className="text-xs text-red-500 italic">
@@ -72,7 +70,7 @@ export default function Login() {
                 placeholder="password"
                 className="w-full h-[60px] px-5 py-2 bg-transparent border-[1px] border-[#192028] rounded-full text-white outline-none"
                 onChange={(e) => SetPassword(e.target.value)}
-                // required
+                required
               />
               <p className="text-xs text-red-500 italic">
                 {error && error.password

@@ -1,10 +1,6 @@
 <?php
 
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
-use Illuminate\Support\Facades\Auth;
-
-use function Laravel\Prompts\error;
 
 
 Route::controller(\App\Http\Controllers\HomeController::class)->group(function () {
@@ -32,17 +28,25 @@ Route::controller(\App\Http\Controllers\SessionController::class)->group(functio
 Route::controller(\App\Http\Controllers\PostController::class)->group(function () {
     Route::post("/create", "store");
 
-    Route::post("/posts/upvote", "upvote");
-    Route::post("/posts/downvote", "downvote");
+    Route::post("/posts/{post_id}/upvote", "upvote");
+    Route::post("/posts/{post_id}/downvote", "downvote");
 
     Route::get("/posts/{post_id}", "show");
+
+    Route::delete("/posts/{post_id}", "delete");
 });
 
 Route::controller(\App\Http\Controllers\CommunityController::class)->group(function () {
     Route::get("/r/{community_name}", "show");
 
-    Route::get("/user/communities", "subscriptions");
+    Route::get("/user/{username}/communities", "subscriptions");
 
-    Route::post("community/join", "join");
-    Route::post("community/leave", "leave");
+    Route::post("user/community/{community_name}/join", "join");
+    Route::post("user/community/{community_name}/leave", "leave");
+
+    Route::post("/community/create", "store");
+});
+
+Route::controller(\App\Http\Controllers\CommentController::class)->group(function () {
+    Route::post("/posts/{post_id}/comment", "store");
 });

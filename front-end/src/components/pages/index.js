@@ -7,3 +7,4 @@ export { default as RegisterPage } from "./Register.jsx";
 export { default as UserPage } from "./User.jsx";
 export { default as UserCommentsPage } from "./UserComments.jsx";
 export { default as UserUpvotesPage } from "./UserUpvotes.jsx";
+export { default as CreateCommunityPage } from "./CreateCommunity.jsx";

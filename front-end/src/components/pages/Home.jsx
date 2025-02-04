@@ -12,14 +12,15 @@ import { useBlueditDataContext } from "../../api/DataContext";
 import { useNavigate } from "react-router";
 
 export default function Home() {
-  const { paginateNow, SetPaginateNow } = useBlueditDataContext();
+  const { paginateNow, SetPaginateNow, SetException } = useBlueditDataContext();
 
   const navigate = useNavigate();
-  const [isFirstRender, SetIsFirstRender] = useState(true);
   const [posts, SetPosts] = useState([]);
   const [links, SetLinks] = useState({});
 
   const [showMessage, setShowMessage] = useState(false);
+
+  const [isFirstRender, SetIsFirstRender] = useState(true);
 
   const HOST = process.env.REACT_APP_API_HOST;
 
@@ -38,14 +39,17 @@ export default function Home() {
       })
       .then((response) => {
         console.log(response);
+
         SetPosts((prevPosts) => [...prevPosts, ...response?.data?.data]);
         SetLinks(response?.data?.links);
 
-        if (response?.data?.data?.length === 0) {
+        if (response?.data?.data.length === 0) {
           setShowMessage(true);
         }
       })
-      .catch((err) => console.error(err));
+      .catch((err) => {
+        SetException(err?.message);
+      });
   };
 
   useEffect(() => {
@@ -58,11 +62,15 @@ export default function Home() {
       getData(links.next);
       SetPaginateNow(false);
     }
+
+    if (posts.length !== 0 && !links.next) {
+      setShowMessage(true);
+    }
   }, [paginateNow]);
 
   return (
     <App>
-      <div className="flex flex-col gap-5 mt-14">
+      <div className="flex flex-col gap-5">
         {posts.length === 0 ? (
           showMessage ? (
             <div className="flex justify-center items-center h-[50vh]">
@@ -73,14 +81,12 @@ export default function Home() {
           )
         ) : (
           posts.map((post, index) => {
-            const postTitle = post.title.replaceAll(" ", "_");
-
             return (
               <Post
                 key={index}
                 post={post}
                 displayUsername={false}
-                onClick={() => navigate(`posts/${post.post_id}/${postTitle}`)}
+                onClick={() => navigate(`posts/${post.post_id}`)}
               />
             );
           })

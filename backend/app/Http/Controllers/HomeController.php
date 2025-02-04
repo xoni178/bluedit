@@ -11,39 +11,44 @@ use App\Models\User;
 
 use Illuminate\Http\Request;
 use App\Services\UserService;
+use Illuminate\Database\Query\Builder;
 
 class HomeController extends Controller
 {
     public function index()
     {
         $user = null;
-        $total = Community::count();
-
-        $randomOffset = mt_rand(0, max(0, $total - 10));
-        $randomCommunities = Community::offset($randomOffset)->limit(10)->inRandomOrder();
-
 
         if (request()->hasCookie("token")) {
             $token = request()->cookie("token");
             $user = UserService::authenticateUser($token);
         }
 
-        $communities = $randomCommunities->get();
+        if ($user) {
+            $randomSubscribedCommunities = $user->communities()->getQuery()->select("name", "desc", "icon_url", "banner_url", "created_at")->inRandomOrder();
 
-        $randomValue = mt_rand(0, 2);
-        $randomOffset = mt_rand(0, max(0, $total - 10));
+            $randomCommunities = Community::select("name", "desc", "icon_url", "banner_url", "created_at")->whereDoesntHave("users", function ($query) use ($user) {
+                $query->where("community_user.username", $user->username);
+            })->inRandomOrder();
 
-        $communitiesByName = $communities->keyBy('name');
+            $communities = $randomSubscribedCommunities->union($randomCommunities)->get();
+        } else {
+            $communities = Community::select("name", "desc", "icon_url", "banner_url", "created_at")->inRandomOrder()->get();
+        }
+        $communitiesNames = $communities->pluck("name");
 
-        $posts = Post::whereIn("community_name", $communities->pluck("name"))
-            ->offset($randomOffset)
-            ->limit($randomValue)
+        $total = Post::whereIn("community_name", $communitiesNames)->count();
+
+        $randomOffset = mt_rand(0, max(0, $total - rand(0, 7)));
+
+        $communities = $communities->keyBy('name');
+
+        $posts = Post::whereIn("community_name", $communitiesNames)
             ->inRandomOrder()
-            ->orderBy("created_at", "DESC")
+            ->skip($randomOffset)
             ->paginate(5)
-            ->through(function ($post) use ($communitiesByName, $user) {
-                $post->community = $communitiesByName[$post->community_name];
-                $post->vote = $user ? ($user->posts_voted()->where("post_id", $post->post_id)->first())?->vote_type : null;
+            ->through(function ($post) use ($communities) {
+                $post->community = $communities[$post->community_name];
                 return $post;
             });
 

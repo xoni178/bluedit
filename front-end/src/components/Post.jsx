@@ -9,7 +9,7 @@ import { useBlueditDataContext } from "../api/DataContext";
 import UseWindowDimensions from "./helpers/UseWindowDimensions";
 export default function Post({ post, onClick, displayUsername }) {
   const { width } = UseWindowDimensions();
-  const { SetImageToFullscreen } = useBlueditDataContext();
+  const { SetImageToFullscreen, SetException } = useBlueditDataContext();
 
   const [upvoted, SetUpvoted] = useState(false);
   const [downvoted, SetDownvoted] = useState(false);
@@ -19,33 +19,39 @@ export default function Post({ post, onClick, displayUsername }) {
   const handleUpvote = (e) => {
     e.stopPropagation();
 
-    ApiRequest.post(`/api/posts/upvote`, {
-      post_id: post.post_id,
-    })
-      .then((response) => {
-        if (response.status === 200) {
-          console.log("upvoted");
-          SetUpvoted((prev) => !prev);
-          if (downvoted) SetDownvoted(false);
-        }
+    SetUpvoted((prev) => !prev);
+    if (downvoted) SetDownvoted(false);
+
+    ApiRequest.get("/sanctum/csrf-cookie")
+      .then(() => {
+        ApiRequest.post(`/api/posts/${post.post_id}/upvote`)
+          .then((response) => {
+            if (response.status === 200) {
+              console.log("upvoted");
+            }
+          })
+          .catch((err) => SetException(err?.message));
       })
-      .catch((err) => console.error(err));
+      .catch((err) => SetException(err?.message));
   };
 
   const handleDownvote = (e) => {
     e.stopPropagation();
 
-    ApiRequest.post(`/api/posts/downvote`, {
-      post_id: post.post_id,
-    })
-      .then((response) => {
-        if (response.status === 200) {
-          console.log("downvoted");
-          if (upvoted) SetUpvoted(false);
-          SetDownvoted((prev) => !prev);
-        }
+    if (upvoted) SetUpvoted(false);
+    SetDownvoted((prev) => !prev);
+
+    ApiRequest.get("/sanctum/csrf-cookie")
+      .then(() => {
+        ApiRequest.post(`/api/posts/${post.post_id}/downvote`)
+          .then((response) => {
+            if (response.status === 200) {
+              console.log("downvoted");
+            }
+          })
+          .catch((err) => SetException(err?.message));
       })
-      .catch((err) => console.error(err));
+      .catch((err) => SetException(err?.message));
   };
 
   useEffect(() => {
@@ -125,7 +131,7 @@ export default function Post({ post, onClick, displayUsername }) {
       ) : null}
 
       <div
-        className="w-full h-[30px] flex items-center gap-5 mb-1 mt-3"
+        className="w-full h-[30px] flex items-center gap-5 mb-3 mt-3"
         onClick={(e) => e.stopPropagation()}
       >
         <div className="flex items-center gap-3 px-2 py-1 bg-[#192028] rounded-full shadow-lg">

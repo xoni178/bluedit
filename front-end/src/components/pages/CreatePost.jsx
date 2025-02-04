@@ -4,7 +4,7 @@ import App from "../../App";
 import { useNavigate, useSearchParams } from "react-router";
 
 import { useBlueditDataContext } from "../../api/DataContext";
-import { ResizeImage } from "../helpers/ResizeImage";
+import ResizeImage from "../helpers/ResizeImage";
 import ApiRequest from "../../api/ApiRequest";
 
 import { ListButton } from "../buttons";
@@ -30,6 +30,8 @@ export default function CreatePost() {
   const [videoFile, SetVideoFile] = useState(null);
   const [videoFileRaw, SetVideoFileRaw] = useState(null);
   const [body, SetBody] = useState(null);
+
+  const [error, SetError] = useState(null);
 
   const onSubmit = (e) => {
     e.preventDefault();
@@ -76,7 +78,15 @@ export default function CreatePost() {
           console.log(response);
         })
         .catch((error) => {
-          SetException(error.response?.data?.message);
+          if (error.status >= 500) {
+            SetException("Server error");
+            return;
+          }
+          if (error.status < 400) {
+            SetException(error.message);
+            return;
+          }
+          SetError(error?.response?.errors);
         });
     });
   };
@@ -166,6 +176,13 @@ export default function CreatePost() {
               required
             />
           </div>
+          <p className="text-xs text-red-500 italic">
+            {error && error.title
+              ? error.title.map((err) => {
+                  return err;
+                })
+              : null}
+          </p>
           {postType === "video_post" ? (
             videoFile ? (
               <div className="w-[720px] h-[480px] relative rounded-lg ">
@@ -198,6 +215,13 @@ export default function CreatePost() {
                     <p className="text-sm">Upload Video</p>
                   </button>
                 </div>
+                <p className="text-xs text-red-500 italic">
+                  {error && error.video
+                    ? error.video.map((err) => {
+                        return err;
+                      })
+                    : null}
+                </p>
               </div>
             )
           ) : null}
@@ -236,6 +260,13 @@ export default function CreatePost() {
                     <p className="text-sm">Upload Image</p>
                   </button>
                 </div>
+                <p className="text-xs text-red-500 italic">
+                  {error && error.image
+                    ? error.image.map((err) => {
+                        return err;
+                      })
+                    : null}
+                </p>
               </div>
             )
           ) : null}
@@ -250,6 +281,13 @@ export default function CreatePost() {
                 onChange={(e) => SetBody(e.target.value)}
                 required
               ></textarea>
+              <p className="text-xs text-red-500 italic">
+                {error && error.body
+                  ? error.body.map((err) => {
+                      return err;
+                    })
+                  : null}
+              </p>
             </div>
           ) : null}
 

@@ -43,11 +43,11 @@ class SessionController extends Controller
                 $token->plainTextToken,
                 60 * 24 * 7,
                 '/',
-                null,
+                '127.0.0.1',
                 false,
                 true,
                 false,
-                'Strict'
+                'Lax'
             ));
     }
 

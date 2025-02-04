@@ -10,6 +10,9 @@ class Comment extends Model
     /** @use HasFactory<\Database\Factories\CommentFactory> */
     use HasFactory;
 
+    protected $fillable = ["username", "post_id", "body"];
+
+
     public function getUpvotesAttribute()
     {
         return $this->users()->where('comment_votes.vote_type', 'UPVOTE')->count();

@@ -21,6 +21,7 @@ function App({ children }) {
     SetSuccess,
     imageToFullscreen,
     SetImageToFullscreen,
+    authUser,
   } = useBlueditDataContext();
 
   const [searchDropdownActive, SetSearchDropdownActive] = useState(false);
@@ -30,35 +31,47 @@ function App({ children }) {
   const [subscribetCommunities, SetsubscribetCommunities] = useState(null);
 
   useEffect(() => {
-    ApiRequest.get("/api/user/communities")
-      .then((response) => {
-        console.log(response);
-        SetsubscribetCommunities(response?.data?.data);
-      })
-      .catch((error) => {
-        if (error.code === "ERR_NETWORK") {
-          SetException(
-            "Network Error: Check your internet connection or server."
-          );
-        }
-        if (error.status >= 500) SetException("Server error");
-        SetException(error.response?.data?.message);
-      });
-  }, []);
+    if (authUser) {
+      ApiRequest.get(`/api/user/${authUser?.username}/communities`)
+        .then((response) => {
+          console.log(response);
+          SetsubscribetCommunities(response?.data?.data);
+        })
+        .catch((error) => {
+          if (error.code === "ERR_NETWORK") {
+            SetException(
+              "Network Error: Check your internet connection or server."
+            );
+          }
+          if (error.status >= 500) SetException("Server error");
+          SetException(error.response?.data?.message);
+        });
+    }
+  }, [authUser]);
 
   const startCountDown = (type) => {
     setTimeout(() => {
       if (type === "error") SetException(null);
       if (type === "success") SetSuccess(null);
-    }, 4000);
+    }, 10000);
   };
 
   const handlePopup = (type) => {
     startCountDown(type);
     if (type === "success")
-      return <SuccessHandeler message={"Success: " + success} />;
+      return (
+        <SuccessHandeler
+          message={"Success: " + success}
+          SetException={(value) => SetSuccess(value)}
+        />
+      );
     if (type === "error")
-      return <ExceptionsHandeler message={"Error: " + exception} />;
+      return (
+        <ExceptionsHandeler
+          message={"Error: " + exception}
+          SetException={(value) => SetException(value)}
+        />
+      );
   };
 
   useEffect(() => {
@@ -71,12 +84,14 @@ function App({ children }) {
 
   return (
     <div className="h-fit bg-[#090e13]">
-      {console.log(imageToFullscreen)}
       {imageToFullscreen ? (
-        <div className="absolute bg-black bg-opacity-70 w-[100vw] h-[100vh] z-30 flex justify-center items-center">
+        <div
+          className="absolute bg-black bg-opacity-70 w-[100vw] h-[100vh] z-30 flex justify-center items-center"
+          onClick={() => SetImageToFullscreen(null)}
+        >
           <div className="w-3 h-3 rounded-full p-5 bg-red-500 flex justify-center items-center absolute top-11 right-3">
             <button
-              className="text-white"
+              className="text-white hover:cursor-pointer"
               onClick={() => SetImageToFullscreen(null)}
             >
               X
@@ -114,7 +129,7 @@ function App({ children }) {
       </header>
 
       <main className="h-fit flex flex-row">
-        <div className="ml-[20%] mt-[50px] w-full flex items-center flex-col max-lg:ml-0">
+        <div className="ml-[290px] mt-[100px] w-full flex items-center flex-col max-lg:ml-0">
           {children}
         </div>
 

@@ -9,7 +9,8 @@ use App\Services\UserService;
 
 use App\Http\Requests\StorePostRequest;
 use App\Http\Requests\UpdatePostRequest;
-use App\Http\Resources\PostCommentResource;
+use App\Http\Resources\PostResource;
+use App\Http\Resources\CommentResource;
 
 class PostController extends Controller
 {
@@ -34,7 +35,7 @@ class PostController extends Controller
             ]);
         } else if ($request->postable_type === "image_post") {
 
-            $path = $request->file("image")->store("images", "public");
+            $path = $request->file("image")->store("images/posts", "public");
 
             if ($path) {
 
@@ -43,7 +44,7 @@ class PostController extends Controller
                 ]);
             }
         } else if ($request->postable_type === "video_post") {
-            $path = $request->file("video")->store("videos", "public");
+            $path = $request->file("video")->store("videos/posts", "public");
 
             if ($path) {
                 $videoPost = \App\Models\VideoPost::create([
@@ -69,34 +70,32 @@ class PostController extends Controller
      */
     public function show($post_id)
     {
-        try {
-            $user = null;
 
-            $post = Post::FindOrFail($post_id);
-            if (request()->hasCookie("token")) {
-                $token = request()->cookie("token");
-                $user = UserService::authenticateUser($token);
-            }
+        $post = Post::find($post_id);
 
+        if (!$post) return response()->json(["error" => "Not found"],  404);
 
-            $comments = $post->comments()->orderBy("created_at", "DESC")->get();
+        $comments = $post->comments()->orderBy("created_at", "DESC")->paginate(10);
 
-            // return response()->json(["vote" => $post->vote]);
-
-            return new PostCommentResource(["post" => $post, "comments" => $comments]);
-        } catch (\Illuminate\Database\Eloquent\ModelNotFoundException $err) {
-
-            return response()->json(["error" => "Not found"],  404);
-        }
+        return response()->json([
+            "post" => new PostResource($post),
+            "comments" => CommentResource::collection($comments),
+            "links" => [
+                "next" => $comments->nextPageUrl()
+            ]
+        ]);
     }
 
-    public function upvote(Request $request)
+    public function upvote(Request $request, $post_id)
     {
         $token = $request->hasCookie("token") ? $request->cookie("token") : null;
 
         $user = UserService::authenticateUser($token);
 
-        $post = Post::findOrFail($request->post_id);
+        $post = Post::find($post_id);
+
+        if (!$post) return response()->json(["error" => "Post Not found"],  404);
+
 
         $upvoteExists = $post->users()->where("users.username", $user->username)->where("post_votes.vote_type", "UPVOTE")->exists();
 
@@ -112,13 +111,15 @@ class PostController extends Controller
         return response(null, 200);
     }
 
-    public function downvote(Request $request)
+    public function downvote(Request $request, $post_id)
     {
         $token = $request->hasCookie("token") ? $request->cookie("token") : null;
 
         $user = UserService::authenticateUser($token);
 
-        $post = Post::findOrFail($request->post_id);
+        $post = Post::find($post_id);
+
+        if (!$post) return response()->json(["error" => "Post Not found"],  404);
 
         $downvoteExits = $post->users()->where("users.username", $user->username)->where("post_votes.vote_type", "DOWNVOTE")->exists();
 

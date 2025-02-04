@@ -34,4 +34,4 @@ const ResizeImage = (file, maxWidth, maxHeight, callback) => {
   reader.readAsDataURL(file);
 };
 
-export { ResizeImage };
+export default ResizeImage;

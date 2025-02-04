@@ -9,6 +9,7 @@ import {
   CommunityPage,
   UserCommentsPage,
   UserUpvotesPage,
+  CreateCommunityPage,
 } from "./pages";
 
 import NotFound from "./exceptions/NotFound";
@@ -56,6 +57,7 @@ const AllRoutes = () => {
           }
         />
         <Route path="/r/:community" element={<CommunityPage />} />
+        <Route path="/community/create" element={<CreateCommunityPage />} />
 
         <Route path="*" element={<NotFound />} />
       </Routes>

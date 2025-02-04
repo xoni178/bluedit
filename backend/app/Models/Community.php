@@ -9,7 +9,7 @@ class Community extends Model
 {
 
     use HasFactory;
-
+    protected $fillable = ["name", "desc", "icon_url", "banner_url"];
 
     protected $primaryKey = "name";
 

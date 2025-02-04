@@ -15,11 +15,9 @@ import Loading from "../helpers/Loading";
 
 import { useBlueditDataContext } from "../../api/DataContext";
 
-import UseWindowDimensions from "../helpers/UseWindowDimensions";
+import UserInfo from "../UserInfo";
 
 export default function User() {
-  const { width } = UseWindowDimensions();
-
   const { paginateNow, SetPaginateNow } = useBlueditDataContext();
 
   const [isFirstRender, SetIsFirstRender] = useState(true);
@@ -45,7 +43,6 @@ export default function User() {
           : nextLink
       )
       .then((response) => {
-        console.log(response);
         SetUser(response?.data?.data?.user);
 
         SetPostsAndComments((prevPosts) => [
@@ -78,53 +75,7 @@ export default function User() {
     <App>
       <section className="w-full flex flex-col  items-center">
         <div className="w-full flex items-center flex-col">
-          {width >= 640 ? (
-            <div className="w-[700px] h-[200px] flex flex-row justify-center items-center gap-5">
-              <div className="flex flex-row justify-center items-center gap-5">
-                <div className="w-[64px] h-[64px]">
-                  <UserSvg />
-                </div>
-                <h1 className="text-white text-3xl">{user.username}</h1>
-              </div>
-              <div className="w-[350px] h-[100px] bg-black flex flex-row items-center p-5 rounded-lg">
-                <div className="w-full text-white flex flex-col items-center">
-                  <p className="text-lg">{user.posts_karma}</p>
-                  <p className="text-sm text-gray-400">Post karma</p>
-                </div>
-                <div className="w-full text-white flex flex-col items-center">
-                  <p className="text-lg">{user.comments_karma}</p>
-                  <p className="text-sm text-gray-400">Comment karma</p>
-                </div>
-                <div className="w-full text-white flex flex-col items-center">
-                  <p className="text-lg ">{user.created_at}</p>
-                  <p className="text-sm text-gray-400">Cake day</p>
-                </div>
-              </div>
-            </div>
-          ) : (
-            <div className="w-[700px] h-[400px] flex flex-col justify-center items-center gap-5">
-              <div className="flex flex-col justify-center items-center gap-5">
-                <div className="w-[64px] h-[64px]">
-                  <UserSvg />
-                </div>
-                <h1 className="text-white text-3xl">{user.username}</h1>
-              </div>
-              <div className="w-[350px] h-[100px] bg-black flex flex-row items-center p-5 rounded-lg">
-                <div className="w-full text-white flex flex-col items-center">
-                  <p className="text-lg">{user.posts_karma}</p>
-                  <p className="text-sm text-gray-400">Post karma</p>
-                </div>
-                <div className="w-full text-white flex flex-col items-center text-center">
-                  <p className="text-lg">{user.comments_karma}</p>
-                  <p className="text-sm text-gray-400">Comment karma</p>
-                </div>
-                <div className="w-full text-white flex flex-col items-center">
-                  <p className="text-lg ">{user.created_at}</p>
-                  <p className="text-sm text-gray-400">Cake day</p>
-                </div>
-              </div>
-            </div>
-          )}
+          <UserInfo user={user} />
 
           <div>
             <ul className="text-white flex flex-row gap-10">
@@ -157,6 +108,7 @@ export default function User() {
           </div>
         </div>
         <div className="w-[60%] flex flex-col gap-5 mt-14 items-center">
+          {console.log(postsAndComments)}
           {postsAndComments.length === 0 ? (
             showMessage ? (
               <div className="flex justify-center items-center h-[50vh]">
