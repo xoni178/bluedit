@@ -13,8 +13,6 @@ Bluedit is a Reddit-like web application built with Laravel and ReactJS. It allo
 - **Voting System**: Upvote and downvote posts and comments to influence visibility.
 
 ## Screenshots & GIFs
-> *(Replace with actual image & GIF paths)*
-
 | Home Page | Post View | Community Page |
 |-----------|----------|---------------|
 | ![Home](assets/images/Screenshot1.png) | ![Post](assets/images/Screenshot3.png) | ![Community](assets/images/Screenshot2.png) |
