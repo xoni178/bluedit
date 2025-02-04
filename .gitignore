@@ -1,0 +1,3 @@
+# Ignore assets like images and GIFs
+assets/images/*
+!assets/images/.keep
