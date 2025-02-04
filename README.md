@@ -17,7 +17,7 @@ Bluedit is a Reddit-like web application built with Laravel and ReactJS. It allo
 
 | Home Page | Post View | Community Page |
 |-----------|----------|---------------|
-| ![Home](path/to/home-image.gif) | ![Post](path/to/post-image.gif) | ![Community](path/to/community-image.gif) |
+| ![Home](assets/images/Screenshot1.png) | ![Post](assets/images/Screenshot3.png) | ![Community](assets/images/Screenshot2.png) |
 
 ## Technologies Used
 - **Backend:** Laravel 11
