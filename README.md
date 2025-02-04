@@ -31,11 +31,17 @@ Bluedit is a Reddit-like web application built with Laravel and ReactJS. It allo
    ```sh
    git clone https://github.com/yourusername/bluedit.git
    ```
+2. **Mysql databse setup**
+   ```sh
+   CREATE DATABASE bluedit;
+   ```
 2. **Backend Setup:**
    ```sh
    cd backend
    composer install
    cp .env.example .env
+   (On .env file): DB_USERNAME=(write your mysql username)
+   (On .env file): DB_PASSWORD=(write your mysql user password)
    php artisan key:generate
    php artisan migrate --seed
    php artisan serve
