@@ -1,6 +1,4 @@
 import { useEffect, useState } from "react";
-import App from "../../App";
-
 import axios from "axios";
 
 import Post from "../Post";
@@ -72,81 +70,77 @@ export default function User() {
   }, [paginateNow]);
 
   return (
-    <App>
-      <section className="w-full flex flex-col  items-center">
-        <div className="w-full flex items-center flex-col">
-          <UserInfo user={user} />
+    <section className="w-full flex flex-col  items-center">
+      <div className="w-full flex items-center flex-col">
+        <UserInfo user={user} />
 
-          <div>
-            <ul className="text-white flex flex-row gap-10">
-              <SimpleButton
-                link={`/users/${username}`}
-                active={
-                  location.pathname === `/users/${username}` ? true : false
-                }
-                slot={"Posts"}
-              />
-              <SimpleButton
-                link={`/users/${username}/comments`}
-                active={
-                  location.pathname === `/users/${username}/comments`
-                    ? true
-                    : false
-                }
-                slot={"Comments"}
-              />
-              <SimpleButton
-                link={`/users/${username}/upvotes`}
-                active={
-                  location.pathname === `/users/${username}/upvotes`
-                    ? true
-                    : false
-                }
-                slot={"Upvoted"}
-              />
-            </ul>
-          </div>
-        </div>
-        <div className="w-[60%] flex flex-col gap-5 mt-14 items-center">
-          {console.log(postsAndComments)}
-          {postsAndComments.length === 0 ? (
-            showMessage ? (
-              <div className="flex justify-center items-center h-[50vh]">
-                <h1 className="text-white text-3xl max-sm:text-lg">
-                  No posts or comments to show
-                </h1>
-              </div>
-            ) : (
-              <Loading />
-            )
-          ) : (
-            postsAndComments.map((entity, index) => {
-              if (entity.type === "post") {
-                const postTitle = entity.title.replaceAll(" ", "_");
-                return (
-                  <Post
-                    key={index}
-                    post={entity}
-                    displayUsername={false}
-                    onClick={() => navigate(`/posts/${entity.id}/${postTitle}`)}
-                  />
-                );
-              } else {
-                return <Comment key={index} comment={entity} />;
+        <div>
+          <ul className="text-white flex flex-row gap-10">
+            <SimpleButton
+              link={`/users/${username}`}
+              active={location.pathname === `/users/${username}` ? true : false}
+              slot={"Posts"}
+            />
+            <SimpleButton
+              link={`/users/${username}/comments`}
+              active={
+                location.pathname === `/users/${username}/comments`
+                  ? true
+                  : false
               }
-            })
-          )}
-          {postsAndComments.length !== 0 ? (
-            showMessage ? (
-              <div className="flex justify-center items-center h-[100px]">
-                <h1 className="text-white text-xl">No more posts to show</h1>
-              </div>
-            ) : (
-              <Loading />
-            )
-          ) : null}
+              slot={"Comments"}
+            />
+            <SimpleButton
+              link={`/users/${username}/upvotes`}
+              active={
+                location.pathname === `/users/${username}/upvotes`
+                  ? true
+                  : false
+              }
+              slot={"Upvoted"}
+            />
+          </ul>
         </div>
-      </section>
-    </App>
+      </div>
+      <div className="w-[60%] flex flex-col gap-5 mt-14 items-center">
+        {console.log(postsAndComments)}
+        {postsAndComments.length === 0 ? (
+          showMessage ? (
+            <div className="flex justify-center items-center h-[50vh]">
+              <h1 className="text-white text-3xl max-sm:text-lg">
+                No posts or comments to show
+              </h1>
+            </div>
+          ) : (
+            <Loading />
+          )
+        ) : (
+          postsAndComments.map((entity, index) => {
+            if (entity.type === "post") {
+              const postTitle = entity.title.replaceAll(" ", "_");
+              return (
+                <Post
+                  key={index}
+                  post={entity}
+                  displayUsername={false}
+                  onClick={() => navigate(`/posts/${entity.id}/${postTitle}`)}
+                />
+              );
+            } else {
+              return <Comment key={index} comment={entity} />;
+            }
+          })
+        )}
+        {postsAndComments.length !== 0 ? (
+          showMessage ? (
+            <div className="flex justify-center items-center h-[100px]">
+              <h1 className="text-white text-xl">No more posts to show</h1>
+            </div>
+          ) : (
+            <Loading />
+          )
+        ) : null}
+      </div>
+    </section>
   );
 }

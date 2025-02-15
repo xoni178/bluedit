@@ -2,7 +2,6 @@ import { useEffect, useState } from "react";
 import ApiRequest from "../../api/ApiRequest";
 
 import { ReactComponent as LeftArrowSvg } from "../../assets/svg/left-arrow.svg";
-import App from "../../App";
 import axios from "axios";
 
 import { useLocation, useNavigate } from "react-router-dom";
@@ -103,78 +102,74 @@ export default function PostPage() {
   };
 
   return (
-    <App>
-      <section className="flex flex-col gap-5">
-        {post ? (
-          <div className="flex flex-row gap-1">
-            <div
-              onClick={() => {
-                const prevPath = window.history.back() || "/";
-                navigate(prevPath, { replace: true });
-              }}
-              className="w-[32px] h-[32px] flex flex-row justify-center items-center mt-[5px] rounded-full bg-[#192028] hover:cursor-pointer"
-            >
-              <span>
-                <LeftArrowSvg />
-              </span>
-            </div>
-
-            <Post post={post} displayUsername={true} />
+    <section className="flex flex-col gap-5">
+      {post ? (
+        <div className="flex flex-row gap-1">
+          <div
+            onClick={() => {
+              const prevPath = window.history.back() || "/";
+              navigate(prevPath, { replace: true });
+            }}
+            className="w-[32px] h-[32px] flex flex-row justify-center items-center mt-[5px] rounded-full bg-[#192028] hover:cursor-pointer"
+          >
+            <span>
+              <LeftArrowSvg />
+            </span>
           </div>
-        ) : (
-          <Loading />
-        )}
 
-        {post ? (
-          <div className="w-full h-fit flex flex-col gap-3 justify-start mt-10">
-            <div>
-              <form method="post" onSubmit={(e) => handleSubmit(e)}>
-                <input
-                  type="text"
-                  name="comment"
-                  id="comment"
-                  placeholder="Write a comment..."
-                  className="w-full h-[60px] px-5 py-2 bg-transparent border-[1px] border-[#192028] rounded-full text-white outline-none"
-                  onChange={(e) => SetCommentValue(e.target.value)}
-                  value={commentValue}
-                />
-              </form>
-            </div>
+          <Post post={post} displayUsername={true} />
+        </div>
+      ) : (
+        <Loading />
+      )}
 
-            {createdComments.length !== 0
-              ? createdComments.map((comment, index) => {
-                  return <Comment key={index} comment={comment} />;
-                })
-              : null}
-            {comments.length === 0 && createdComments.length === 0 ? (
-              showMessage ? (
-                <div className="flex justify-center items-center h-[50vh]">
-                  <h1 className="text-white text-3xl">No comments</h1>
-                </div>
-              ) : (
-                <Loading />
-              )
-            ) : (
-              comments.map((comment, index) => {
+      {post ? (
+        <div className="w-full h-fit flex flex-col gap-3 justify-start mt-10">
+          <div>
+            <form method="post" onSubmit={(e) => handleSubmit(e)}>
+              <input
+                type="text"
+                name="comment"
+                id="comment"
+                placeholder="Write a comment..."
+                className="w-full h-[60px] px-5 py-2 bg-transparent border-[1px] border-[#192028] rounded-full text-white outline-none"
+                onChange={(e) => SetCommentValue(e.target.value)}
+                value={commentValue}
+              />
+            </form>
+          </div>
+
+          {createdComments.length !== 0
+            ? createdComments.map((comment, index) => {
                 return <Comment key={index} comment={comment} />;
               })
-            )}
-            {comments.length !== 0 ? (
-              showMessage ? (
-                <div className="flex justify-center items-center h-[100px]">
-                  <h1 className="text-white text-xl">
-                    No more comments to show
-                  </h1>
-                </div>
-              ) : (
-                <Loading />
-              )
-            ) : null}
-          </div>
-        ) : (
-          <Loading />
-        )}
-      </section>
-    </App>
+            : null}
+          {comments.length === 0 && createdComments.length === 0 ? (
+            showMessage ? (
+              <div className="flex justify-center items-center h-[50vh]">
+                <h1 className="text-white text-3xl">No comments</h1>
+              </div>
+            ) : (
+              <Loading />
+            )
+          ) : (
+            comments.map((comment, index) => {
+              return <Comment key={index} comment={comment} />;
+            })
+          )}
+          {comments.length !== 0 ? (
+            showMessage ? (
+              <div className="flex justify-center items-center h-[100px]">
+                <h1 className="text-white text-xl">No more comments to show</h1>
+              </div>
+            ) : (
+              <Loading />
+            )
+          ) : null}
+        </div>
+      ) : (
+        <Loading />
+      )}
+    </section>
   );
 }

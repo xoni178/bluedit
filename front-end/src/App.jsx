@@ -2,6 +2,8 @@ import { useEffect, useState } from "react";
 
 import { useBlueditDataContext } from "./api/DataContext";
 
+import { Outlet } from "react-router";
+
 import { Navbar, Sidebar } from "./components/pagebars";
 import ExceptionsHandeler from "./components/exceptions/ExceptionsHandeler";
 import SuccessHandeler from "./components/helpers/SuccessHandeler";
@@ -47,6 +49,8 @@ function App({ children }) {
           SetException(error.response?.data?.message);
         });
     }
+
+    return () => console.log("unmounted!!");
   }, [authUser]);
 
   const startCountDown = (type) => {
@@ -130,7 +134,7 @@ function App({ children }) {
 
       <main className="h-fit flex flex-row">
         <div className="ml-[290px] mt-[100px] w-full flex items-center flex-col max-lg:ml-0">
-          {children}
+          <Outlet />
         </div>
 
         <Sidebar

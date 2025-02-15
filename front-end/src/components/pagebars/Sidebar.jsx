@@ -1,4 +1,4 @@
-import { LinkButton, CreateButton } from "../buttons";
+import { LinkButton } from "../buttons";
 import { ReactComponent as ArrowDownSvg } from "../../assets/svg/arrow-down.svg";
 
 export default function Sidebar({

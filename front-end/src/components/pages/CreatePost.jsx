@@ -1,5 +1,4 @@
 import { useRef, useState } from "react";
-import App from "../../App";
 
 import { useNavigate, useSearchParams } from "react-router";
 
@@ -128,179 +127,177 @@ export default function CreatePost() {
   };
 
   return (
-    <App>
-      <section className="w-[600px] h-fit max-sm:w-[400px] flex flex-col gap-3 mt-5">
-        <div className="flex">
-          <h1 className="text-white text-3xl font-bold max-sm:text-lg">
-            Create Post
-          </h1>
-        </div>
-        <div className="w-[60%]">
-          <CommunitySelector
-            setSelectedCommunity={(selectedCommunity) =>
-              SetSelectedCommunity(selectedCommunity)
-            }
-            selectedCommunity={selectedCommunity}
-          />
-        </div>
-        <div className="w-[300px] flex gap-4 text-white">
-          <ListButton
-            slot={"Text"}
-            onClick={() => SetPostType("text_post")}
-            active={postType === "text_post" ? true : false}
-          />
-          <ListButton
-            slot={"Image"}
-            onClick={() => SetPostType("image_post")}
-            active={postType === "image_post" ? true : false}
-          />
-          <ListButton
-            slot={"Video"}
-            onClick={() => SetPostType("video_post")}
-            active={postType === "video_post" ? true : false}
-          />
-        </div>
+    <section className="w-[600px] h-fit max-sm:w-[400px] flex flex-col gap-3 mt-5">
+      <div className="flex">
+        <h1 className="text-white text-3xl font-bold max-sm:text-lg">
+          Create Post
+        </h1>
+      </div>
+      <div className="w-[60%]">
+        <CommunitySelector
+          setSelectedCommunity={(selectedCommunity) =>
+            SetSelectedCommunity(selectedCommunity)
+          }
+          selectedCommunity={selectedCommunity}
+        />
+      </div>
+      <div className="w-[300px] flex gap-4 text-white">
+        <ListButton
+          slot={"Text"}
+          onClick={() => SetPostType("text_post")}
+          active={postType === "text_post" ? true : false}
+        />
+        <ListButton
+          slot={"Image"}
+          onClick={() => SetPostType("image_post")}
+          active={postType === "image_post" ? true : false}
+        />
+        <ListButton
+          slot={"Video"}
+          onClick={() => SetPostType("video_post")}
+          active={postType === "video_post" ? true : false}
+        />
+      </div>
 
-        <form
-          method="post"
-          onSubmit={(e) => onSubmit(e)}
-          className="flex flex-col gap-5 "
-        >
-          <div>
-            <input
-              type="text"
-              name="title"
-              placeholder="Title"
-              className="w-full h-[40px] px-5 py-2 bg-transparent border-[1px] border-[#192028] rounded-full text-white"
-              onChange={(e) => SetTittle(e.target.value)}
-              required
-            />
-          </div>
-          <p className="text-xs text-red-500 italic">
-            {error && error.title
-              ? error.title.map((err) => {
-                  return err;
-                })
-              : null}
-          </p>
-          {postType === "video_post" ? (
-            videoFile ? (
-              <div className="w-[720px] h-[480px] relative rounded-lg ">
-                <video controls src={videoFile} className="w-full h-full" />
-                <span
-                  className="absolute w-6 h-6 bg-red-500 cursor-pointer rounded-full top-2 right-2"
-                  onClick={() => SetVideoFile(null)}
-                ></span>
-              </div>
-            ) : (
-              <div>
-                <div className="relative flex justify-center items-center ">
-                  <input
-                    type="file"
-                    name="video"
-                    id="video"
-                    accept="video/*"
-                    onChange={(e) => {
-                      handleVideoPreview(e);
-                    }}
-                    className="opacity-0 w-[500px] h-[160px] absolute top-0 left-0 right-0 bottom-0 mx-auto cursor-pointer bg-red-400 rounded-lg"
-                    required
-                  />
-                  <button className="flex justify-center items-center gap-5 w-[500px] h-[160px] cursor-pointer bg-[#192028] text-white rounded-lg">
-                    <span className="w-24 h-24 rounded-full bg-gray-500 flex justify-center items-center">
-                      <div className="w-11 h-11">
-                        <img src={UploadIcon} alt="" />
-                      </div>
-                    </span>
-                    <p className="text-sm">Upload Video</p>
-                  </button>
-                </div>
-                <p className="text-xs text-red-500 italic">
-                  {error && error.video
-                    ? error.video.map((err) => {
-                        return err;
-                      })
-                    : null}
-                </p>
-              </div>
-            )
-          ) : null}
-          {postType === "image_post" ? (
-            imageFile ? (
-              <div className="w-[720px] h-[480px] relative rounded-lg ">
-                <img
-                  className="w-full h-full object-contain"
-                  ref={imageRef}
-                  src=""
-                  alt="preview"
-                />
-                <span
-                  className="absolute w-6 h-6 bg-red-500 cursor-pointer rounded-full top-2 right-2"
-                  onClick={() => SetImageFile(null)}
-                ></span>
-              </div>
-            ) : (
-              <div>
-                <div className="relative flex justify-center items-center ">
-                  <input
-                    type="file"
-                    name="image"
-                    id="image"
-                    accept="image/*"
-                    onChange={(e) => handleImageReader(e)}
-                    className="opacity-0 w-[500px] h-[160px] absolute top-0 left-0 right-0 bottom-0 mx-auto cursor-pointer bg-red-400 rounded-lg"
-                    required
-                  />
-                  <button className="flex justify-center items-center gap-5 w-[500px] h-[160px] cursor-pointer bg-[#192028] text-white rounded-lg">
-                    <span className="w-24 h-24 rounded-full bg-gray-500 flex justify-center items-center">
-                      <div className="w-11 h-11">
-                        <img src={UploadIcon} alt="" />
-                      </div>
-                    </span>
-                    <p className="text-sm">Upload Image</p>
-                  </button>
-                </div>
-                <p className="text-xs text-red-500 italic">
-                  {error && error.image
-                    ? error.image.map((err) => {
-                        return err;
-                      })
-                    : null}
-                </p>
-              </div>
-            )
-          ) : null}
-          {postType === "text_post" ? (
+      <form
+        method="post"
+        onSubmit={(e) => onSubmit(e)}
+        className="flex flex-col gap-5 "
+      >
+        <div>
+          <input
+            type="text"
+            name="title"
+            placeholder="Title"
+            className="w-full h-[40px] px-5 py-2 bg-transparent border-[1px] border-[#192028] rounded-full text-white"
+            onChange={(e) => SetTittle(e.target.value)}
+            required
+          />
+        </div>
+        <p className="text-xs text-red-500 italic">
+          {error && error.title
+            ? error.title.map((err) => {
+                return err;
+              })
+            : null}
+        </p>
+        {postType === "video_post" ? (
+          videoFile ? (
+            <div className="w-[720px] h-[480px] relative rounded-lg ">
+              <video controls src={videoFile} className="w-full h-full" />
+              <span
+                className="absolute w-6 h-6 bg-red-500 cursor-pointer rounded-full top-2 right-2"
+                onClick={() => SetVideoFile(null)}
+              ></span>
+            </div>
+          ) : (
             <div>
-              <textarea
-                placeholder="Body"
-                name="body"
-                cols="30"
-                rows="10"
-                className="w-full px-5 py-2 bg-transparent border-[1px] border-[#192028] rounded-lg text-white"
-                onChange={(e) => SetBody(e.target.value)}
-                required
-              ></textarea>
+              <div className="relative flex justify-center items-center ">
+                <input
+                  type="file"
+                  name="video"
+                  id="video"
+                  accept="video/*"
+                  onChange={(e) => {
+                    handleVideoPreview(e);
+                  }}
+                  className="opacity-0 w-[500px] h-[160px] absolute top-0 left-0 right-0 bottom-0 mx-auto cursor-pointer bg-red-400 rounded-lg"
+                  required
+                />
+                <button className="flex justify-center items-center gap-5 w-[500px] h-[160px] cursor-pointer bg-[#192028] text-white rounded-lg">
+                  <span className="w-24 h-24 rounded-full bg-gray-500 flex justify-center items-center">
+                    <div className="w-11 h-11">
+                      <img src={UploadIcon} alt="" />
+                    </div>
+                  </span>
+                  <p className="text-sm">Upload Video</p>
+                </button>
+              </div>
               <p className="text-xs text-red-500 italic">
-                {error && error.body
-                  ? error.body.map((err) => {
+                {error && error.video
+                  ? error.video.map((err) => {
                       return err;
                     })
                   : null}
               </p>
             </div>
-          ) : null}
-
+          )
+        ) : null}
+        {postType === "image_post" ? (
+          imageFile ? (
+            <div className="w-[720px] h-[480px] relative rounded-lg ">
+              <img
+                className="w-full h-full object-contain"
+                ref={imageRef}
+                src=""
+                alt="preview"
+              />
+              <span
+                className="absolute w-6 h-6 bg-red-500 cursor-pointer rounded-full top-2 right-2"
+                onClick={() => SetImageFile(null)}
+              ></span>
+            </div>
+          ) : (
+            <div>
+              <div className="relative flex justify-center items-center ">
+                <input
+                  type="file"
+                  name="image"
+                  id="image"
+                  accept="image/*"
+                  onChange={(e) => handleImageReader(e)}
+                  className="opacity-0 w-[500px] h-[160px] absolute top-0 left-0 right-0 bottom-0 mx-auto cursor-pointer bg-red-400 rounded-lg"
+                  required
+                />
+                <button className="flex justify-center items-center gap-5 w-[500px] h-[160px] cursor-pointer bg-[#192028] text-white rounded-lg">
+                  <span className="w-24 h-24 rounded-full bg-gray-500 flex justify-center items-center">
+                    <div className="w-11 h-11">
+                      <img src={UploadIcon} alt="" />
+                    </div>
+                  </span>
+                  <p className="text-sm">Upload Image</p>
+                </button>
+              </div>
+              <p className="text-xs text-red-500 italic">
+                {error && error.image
+                  ? error.image.map((err) => {
+                      return err;
+                    })
+                  : null}
+              </p>
+            </div>
+          )
+        ) : null}
+        {postType === "text_post" ? (
           <div>
-            <button
-              type="submit"
-              className="w-[80px] h-[40px] bg-[#3278cd] flex justify-center items-center text-white rounded-full border border-[#192028] hover:bg-[#020c18] hover:cursor-pointer"
-            >
-              Submit
-            </button>
+            <textarea
+              placeholder="Body"
+              name="body"
+              cols="30"
+              rows="10"
+              className="w-full px-5 py-2 bg-transparent border-[1px] border-[#192028] rounded-lg text-white"
+              onChange={(e) => SetBody(e.target.value)}
+              required
+            ></textarea>
+            <p className="text-xs text-red-500 italic">
+              {error && error.body
+                ? error.body.map((err) => {
+                    return err;
+                  })
+                : null}
+            </p>
           </div>
-        </form>
-      </section>
-    </App>
+        ) : null}
+
+        <div>
+          <button
+            type="submit"
+            className="w-[80px] h-[40px] bg-[#3278cd] flex justify-center items-center text-white rounded-full border border-[#192028] hover:bg-[#020c18] hover:cursor-pointer"
+          >
+            Submit
+          </button>
+        </div>
+      </form>
+    </section>
   );
 }

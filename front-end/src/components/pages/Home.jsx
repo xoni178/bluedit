@@ -3,7 +3,6 @@ import { useEffect, useState } from "react";
 import axios from "axios";
 
 import Post from "../Post";
-import App from "../../App";
 import Loading from "../helpers/Loading";
 
 //context
@@ -69,39 +68,37 @@ export default function Home() {
   }, [paginateNow]);
 
   return (
-    <App>
-      <div className="flex flex-col gap-5">
-        {posts.length === 0 ? (
-          showMessage ? (
-            <div className="flex justify-center items-center h-[50vh]">
-              <h1 className="text-white text-3xl">No posts to show</h1>
-            </div>
-          ) : (
-            <Loading />
-          )
+    <div className="flex flex-col gap-5">
+      {posts.length === 0 ? (
+        showMessage ? (
+          <div className="flex justify-center items-center h-[50vh]">
+            <h1 className="text-white text-3xl">No posts to show</h1>
+          </div>
         ) : (
-          posts.map((post, index) => {
-            return (
-              <Post
-                key={index}
-                post={post}
-                displayUsername={false}
-                onClick={() => navigate(`posts/${post.post_id}`)}
-              />
-            );
-          })
-        )}
+          <Loading />
+        )
+      ) : (
+        posts.map((post, index) => {
+          return (
+            <Post
+              key={index}
+              post={post}
+              displayUsername={false}
+              onClick={() => navigate(`posts/${post.post_id}`)}
+            />
+          );
+        })
+      )}
 
-        {posts.length !== 0 ? (
-          showMessage ? (
-            <div className="flex justify-center items-center h-[100px]">
-              <h1 className="text-white text-xl">No more posts to show</h1>
-            </div>
-          ) : (
-            <Loading />
-          )
-        ) : null}
-      </div>
-    </App>
+      {posts.length !== 0 ? (
+        showMessage ? (
+          <div className="flex justify-center items-center h-[100px]">
+            <h1 className="text-white text-xl">No more posts to show</h1>
+          </div>
+        ) : (
+          <Loading />
+        )
+      ) : null}
+    </div>
   );
 }

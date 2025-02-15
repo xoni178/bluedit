@@ -1,5 +1,4 @@
 import { useEffect, useState } from "react";
-import App from "../../App";
 
 import Comment from "../Comment";
 
@@ -76,68 +75,64 @@ export default function UserComments() {
   }, [paginateNow]);
 
   return (
-    <App>
-      <section className="w-full flex flex-col  items-center">
-        <div className="w-full flex items-center flex-col">
-          <UserInfo user={user} />
-          <div>
-            <ul className="text-white flex flex-row gap-10">
-              <SimpleButton
-                link={`/users/${username}`}
-                active={
-                  location.pathname === `/users/${username}` ? true : false
-                }
-                slot={"Posts"}
-              />
-              <SimpleButton
-                link={`/users/${username}/comments`}
-                active={
-                  location.pathname === `/users/${username}/comments`
-                    ? true
-                    : false
-                }
-                slot={"Comments"}
-              />
-              <SimpleButton
-                link={`/users/${username}/upvotes`}
-                active={
-                  location.pathname === `/users/${username}/upvotes`
-                    ? true
-                    : false
-                }
-                slot={"Upvoted"}
-              />
-            </ul>
-          </div>
+    <section className="w-full flex flex-col  items-center">
+      <div className="w-full flex items-center flex-col">
+        <UserInfo user={user} />
+        <div>
+          <ul className="text-white flex flex-row gap-10">
+            <SimpleButton
+              link={`/users/${username}`}
+              active={location.pathname === `/users/${username}` ? true : false}
+              slot={"Posts"}
+            />
+            <SimpleButton
+              link={`/users/${username}/comments`}
+              active={
+                location.pathname === `/users/${username}/comments`
+                  ? true
+                  : false
+              }
+              slot={"Comments"}
+            />
+            <SimpleButton
+              link={`/users/${username}/upvotes`}
+              active={
+                location.pathname === `/users/${username}/upvotes`
+                  ? true
+                  : false
+              }
+              slot={"Upvoted"}
+            />
+          </ul>
         </div>
-        <div className="w-[60%] h-fit flex flex-col gap-5 mt-14 items-center">
-          {comments.length === 0 ? (
-            showMessage ? (
-              <div className="flex justify-center items-center h-[50vh]">
-                <h1 className="text-white text-3xl max-sm:text-lg">
-                  No comments to show
-                </h1>
-              </div>
-            ) : (
-              <Loading />
-            )
+      </div>
+      <div className="w-[60%] h-fit flex flex-col gap-5 mt-14 items-center">
+        {comments.length === 0 ? (
+          showMessage ? (
+            <div className="flex justify-center items-center h-[50vh]">
+              <h1 className="text-white text-3xl max-sm:text-lg">
+                No comments to show
+              </h1>
+            </div>
           ) : (
-            comments.map((comment, index) => {
-              return <Comment key={index} comment={comment} />;
-            })
-          )}
+            <Loading />
+          )
+        ) : (
+          comments.map((comment, index) => {
+            return <Comment key={index} comment={comment} />;
+          })
+        )}
 
-          {comments.length !== 0 ? (
-            showMessage ? (
-              <div className="flex justify-center items-center h-[100px]">
-                <h1 className="text-white text-xl">No more comments to show</h1>
-              </div>
-            ) : (
-              <Loading />
-            )
-          ) : null}
-        </div>
-      </section>
-    </App>
+        {comments.length !== 0 ? (
+          showMessage ? (
+            <div className="flex justify-center items-center h-[100px]">
+              <h1 className="text-white text-xl">No more comments to show</h1>
+            </div>
+          ) : (
+            <Loading />
+          )
+        ) : null}
+      </div>
+    </section>
   );
 }

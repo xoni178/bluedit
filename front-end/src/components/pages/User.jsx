@@ -1,5 +1,4 @@
 import { useEffect, useState } from "react";
-import App from "../../App";
 
 import ApiRequest from "../../api/ApiRequest";
 
@@ -52,87 +51,83 @@ export default function User() {
   }, []);
 
   return (
-    <App>
-      <section className="w-full">
-        {notFound ? (
-          <NotFound entity={username} />
-        ) : (
-          <>
-            <div className="w-full flex items-center flex-col">
-              <UserInfo user={user} />
+    <section className="w-full">
+      {notFound ? (
+        <NotFound entity={username} />
+      ) : (
+        <>
+          <div className="w-full flex items-center flex-col">
+            <UserInfo user={user} />
 
-              <div>
-                <ul className="text-white flex flex-row gap-10">
-                  <SimpleButton
-                    link={`/users/${username}`}
-                    active={
-                      location.pathname === `/users/${username}` ? true : false
-                    }
-                    slot={"Posts"}
-                  />
-                  <SimpleButton
-                    link={`/users/${username}/comments`}
-                    active={
-                      location.pathname === `/users/${username}/comments`
-                        ? true
-                        : false
-                    }
-                    slot={"Comments"}
-                  />
-                  <SimpleButton
-                    link={`/users/${username}/upvotes`}
-                    active={
-                      location.pathname === `/users/${username}/upvotes`
-                        ? true
-                        : false
-                    }
-                    slot={"Upvoted"}
-                  />
-                </ul>
-              </div>
+            <div>
+              <ul className="text-white flex flex-row gap-10">
+                <SimpleButton
+                  link={`/users/${username}`}
+                  active={
+                    location.pathname === `/users/${username}` ? true : false
+                  }
+                  slot={"Posts"}
+                />
+                <SimpleButton
+                  link={`/users/${username}/comments`}
+                  active={
+                    location.pathname === `/users/${username}/comments`
+                      ? true
+                      : false
+                  }
+                  slot={"Comments"}
+                />
+                <SimpleButton
+                  link={`/users/${username}/upvotes`}
+                  active={
+                    location.pathname === `/users/${username}/upvotes`
+                      ? true
+                      : false
+                  }
+                  slot={"Upvoted"}
+                />
+              </ul>
             </div>
-            <div className="flex flex-col gap-5 mt-14 items-center">
-              {posts.length === 0 ? (
-                showMessage ? (
-                  <div className="flex justify-center items-center h-[50vh]">
-                    <h1 className="text-white text-3xl max-sm:text-lg">
-                      No posts to show
-                    </h1>
-                  </div>
-                ) : (
-                  <Loading />
-                )
+          </div>
+          <div className="flex flex-col gap-5 mt-14 items-center">
+            {posts.length === 0 ? (
+              showMessage ? (
+                <div className="flex justify-center items-center h-[50vh]">
+                  <h1 className="text-white text-3xl max-sm:text-lg">
+                    No posts to show
+                  </h1>
+                </div>
               ) : (
-                posts.map((post, index) => {
-                  const postTitle = post.title.replaceAll(" ", "_");
+                <Loading />
+              )
+            ) : (
+              posts.map((post, index) => {
+                const postTitle = post.title.replaceAll(" ", "_");
 
-                  return (
-                    <Post
-                      key={index}
-                      post={post}
-                      displayUsername={false}
-                      onClick={() =>
-                        navigate(`/posts/${post.post_id}/${postTitle}`)
-                      }
-                    />
-                  );
-                })
-              )}
-              {posts.length !== 0 ? (
-                showMessage ? (
-                  <div className="flex justify-center items-center h-[100px]">
-                    <h1 className="text-white text-xl">
-                      No more posts to show
-                    </h1>
-                  </div>
-                ) : (
-                  <Loading />
-                )
-              ) : null}
-            </div>
-          </>
-        )}
-      </section>
-    </App>
+                return (
+                  <Post
+                    key={index}
+                    post={post}
+                    displayUsername={false}
+                    onClick={() =>
+                      navigate(`/posts/${post.post_id}/${postTitle}`)
+                    }
+                  />
+                );
+              })
+            )}
+            {posts.length !== 0 ? (
+              showMessage ? (
+                <div className="flex justify-center items-center h-[100px]">
+                  <h1 className="text-white text-xl">No more posts to show</h1>
+                </div>
+              ) : (
+                <Loading />
+              )
+            ) : null}
+          </div>
+        </>
+      )}
+    </section>
   );
 }
